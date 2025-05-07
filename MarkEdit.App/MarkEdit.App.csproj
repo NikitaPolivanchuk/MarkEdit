@@ -32,4 +32,8 @@
     <ProjectReference Include="..\MarkEdit.Core\MarkEdit.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+
 </Project>

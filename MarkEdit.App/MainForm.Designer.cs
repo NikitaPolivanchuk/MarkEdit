@@ -84,6 +84,8 @@ namespace MarkEdit.App
             headerToolStripDropDown = new ToolStripDropDownButton();
             toolStripSeparator9 = new ToolStripSeparator();
             linkToolStripButton = new ToolStripButton();
+            toolStripButton1 = new ToolStripButton();
+            toolStripButton2 = new ToolStripButton();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -301,7 +303,7 @@ namespace MarkEdit.App
             // splitContainer1
             // 
             splitContainer1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            splitContainer1.Location = new Point(0, 42);
+            splitContainer1.Location = new Point(0, 53);
             splitContainer1.Margin = new Padding(3, 2, 3, 2);
             splitContainer1.Name = "splitContainer1";
             // 
@@ -312,7 +314,7 @@ namespace MarkEdit.App
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(webView21);
-            splitContainer1.Size = new Size(700, 277);
+            splitContainer1.Size = new Size(700, 261);
             splitContainer1.SplitterDistance = 347;
             splitContainer1.TabIndex = 1;
             // 
@@ -325,7 +327,7 @@ namespace MarkEdit.App
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(347, 277);
+            textBox1.Size = new Size(347, 261);
             textBox1.TabIndex = 0;
             textBox1.WordWrap = false;
             // 
@@ -338,7 +340,7 @@ namespace MarkEdit.App
             webView21.Location = new Point(0, 0);
             webView21.Margin = new Padding(3, 2, 3, 2);
             webView21.Name = "webView21";
-            webView21.Size = new Size(349, 277);
+            webView21.Size = new Size(349, 261);
             webView21.TabIndex = 0;
             webView21.ZoomFactor = 1D;
             // 
@@ -362,7 +364,7 @@ namespace MarkEdit.App
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { saveToolStripButton, saveAsToolStripButton, toolStripSeparator8, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator7, undoToolStripButton, redoToolStripButton, toolStripSeparator6, boldToolStripButton, italicToolStripButton, quoteToolStripButton, codeToolStripButton, headerToolStripDropDown, toolStripSeparator9, linkToolStripButton });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { saveToolStripButton, saveAsToolStripButton, toolStripSeparator8, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator7, undoToolStripButton, redoToolStripButton, toolStripSeparator6, headerToolStripDropDown, boldToolStripButton, italicToolStripButton, quoteToolStripButton, codeToolStripButton, linkToolStripButton, toolStripSeparator9, toolStripButton1, toolStripButton2 });
             toolStrip1.Location = new Point(0, 24);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(700, 27);
@@ -489,11 +491,11 @@ namespace MarkEdit.App
             // 
             // headerToolStripDropDown
             // 
-            headerToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.None;
-            headerToolStripDropDown.Image = Properties.Resources.bold;
+            headerToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            headerToolStripDropDown.Image = Properties.Resources.heading;
             headerToolStripDropDown.ImageTransparentColor = Color.Magenta;
             headerToolStripDropDown.Name = "headerToolStripDropDown";
-            headerToolStripDropDown.Size = new Size(13, 24);
+            headerToolStripDropDown.Size = new Size(33, 24);
             headerToolStripDropDown.Text = "toolStripDropDownButton1";
             headerToolStripDropDown.ToolTipText = "Header level";
             // 
@@ -510,6 +512,24 @@ namespace MarkEdit.App
             linkToolStripButton.Name = "linkToolStripButton";
             linkToolStripButton.Size = new Size(24, 24);
             linkToolStripButton.Text = "Link";
+            // 
+            // toolStripButton1
+            // 
+            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton1.Image = Properties.Resources.list_ul;
+            toolStripButton1.ImageTransparentColor = Color.Magenta;
+            toolStripButton1.Name = "toolStripButton1";
+            toolStripButton1.Size = new Size(24, 24);
+            toolStripButton1.Text = "toolStripButton1";
+            // 
+            // toolStripButton2
+            // 
+            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            toolStripButton2.Image = Properties.Resources.list_ol;
+            toolStripButton2.ImageTransparentColor = Color.Magenta;
+            toolStripButton2.Name = "toolStripButton2";
+            toolStripButton2.Size = new Size(24, 24);
+            toolStripButton2.Text = "toolStripButton2";
             // 
             // MainForm
             // 
@@ -596,5 +616,7 @@ namespace MarkEdit.App
         private ToolStripButton linkToolStripButton;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolStripDropDownButton headerToolStripDropDown;
+        private ToolStripButton toolStripButton1;
+        private ToolStripButton toolStripButton2;
     }
 }
