@@ -6,7 +6,9 @@ public interface ITextEditor
     string SelectedText { get; set; }
     int SelectionStart { get; set; }
     int SelectionLength { get; set; }
-    string CurrentLineText { get; }
+    string[] Lines { get; set; }
     
     void Select(int start, int length);
+    int GetLineFromCharIndex(int index);
+    int GetFirstCharIndexFromLine(int index);
 }

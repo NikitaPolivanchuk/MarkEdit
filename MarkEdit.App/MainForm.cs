@@ -2,6 +2,7 @@ using MarkEdit.App.Events;
 using MarkEdit.Commands.Basic;
 using MarkEdit.Commands.Clipboard;
 using MarkEdit.Commands.Formatting;
+using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
@@ -35,8 +36,14 @@ public partial class MainForm : Form
         italicToolStripButton.Click += (_, _) => _commandManager.Execute(new ItalicCommand(_editor));
         quoteToolStripButton.Click += (_, _) => _commandManager.Execute(new QuoteCommand(_editor));
         codeToolStripButton.Click += (_, _) => _commandManager.Execute(new CodeCommand(_editor));
-        headerIncreaseToolStripButton.Click += (_, _) => _commandManager.Execute(new HeaderIncreaseCommand(_editor));
-        headerDecreaseToolStripButton.Click += (_, _) => _commandManager.Execute(new HeaderDecreaseCommand(_editor));
+        
+        foreach (var level in Enumerable.Range(1, 6))
+        {
+            headerToolStripDropDown.DropDownItems.Add(
+                $"Header {level}", 
+                null,
+                (_, _) => _commandManager.Execute(new HeaderCommand(_editor, level)));
+        }
 
         cutToolStripMenuItem.Click += (_, _) => _commandManager.Execute(new CutCommand(_editor, _clipboard));
         copyToolStripMenuItem.Click += (_, _) => _commandManager.Execute(new CopyCommand(_editor, _clipboard));

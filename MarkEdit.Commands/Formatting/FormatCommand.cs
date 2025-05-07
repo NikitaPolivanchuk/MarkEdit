@@ -20,10 +20,31 @@ public abstract class FormatCommand : IRevertibleCommand
     
     public abstract void Execute();
 
-    public abstract bool CanExecute();
+    public virtual bool CanExecute()
+        => OriginalSelectionLength > 0;
 
     public abstract void Undo();
     
     protected bool IsMultiline()
         => Editor.SelectedText.Contains(Environment.NewLine);
+    
+    protected static string GetLeadingSpaces(string line)
+    {
+        var index = 0;
+        while (index < line.Length && char.IsWhiteSpace(line[index]))
+        {
+            index++;
+        }
+        return line.Substring(0, index);
+    }
+    
+    protected static string GetTrailingSpaces(string line)
+    {
+        var index = line.Length - 1;
+        while (index >= 0 && char.IsWhiteSpace(line[index]))
+        {
+            index--;
+        }
+        return line.Substring(index + 1);
+    }
 }
