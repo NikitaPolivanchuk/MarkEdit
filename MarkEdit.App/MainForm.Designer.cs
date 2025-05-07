@@ -77,15 +77,17 @@ namespace MarkEdit.App
             undoToolStripButton = new ToolStripButton();
             redoToolStripButton = new ToolStripButton();
             toolStripSeparator6 = new ToolStripSeparator();
+            headerToolStripDropDown = new ToolStripDropDownButton();
             boldToolStripButton = new ToolStripButton();
             italicToolStripButton = new ToolStripButton();
             quoteToolStripButton = new ToolStripButton();
             codeToolStripButton = new ToolStripButton();
-            headerToolStripDropDown = new ToolStripDropDownButton();
-            toolStripSeparator9 = new ToolStripSeparator();
             linkToolStripButton = new ToolStripButton();
+            toolStripSeparator9 = new ToolStripSeparator();
             toolStripButton1 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
+            newToolStripButton = new ToolStripButton();
+            openToolStripButton = new ToolStripButton();
             menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -364,7 +366,7 @@ namespace MarkEdit.App
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { saveToolStripButton, saveAsToolStripButton, toolStripSeparator8, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator7, undoToolStripButton, redoToolStripButton, toolStripSeparator6, headerToolStripDropDown, boldToolStripButton, italicToolStripButton, quoteToolStripButton, codeToolStripButton, linkToolStripButton, toolStripSeparator9, toolStripButton1, toolStripButton2 });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, saveAsToolStripButton, toolStripSeparator8, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator7, undoToolStripButton, redoToolStripButton, toolStripSeparator6, headerToolStripDropDown, boldToolStripButton, italicToolStripButton, quoteToolStripButton, codeToolStripButton, linkToolStripButton, toolStripSeparator9, toolStripButton1, toolStripButton2 });
             toolStrip1.Location = new Point(0, 24);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(700, 27);
@@ -451,6 +453,16 @@ namespace MarkEdit.App
             toolStripSeparator6.Name = "toolStripSeparator6";
             toolStripSeparator6.Size = new Size(6, 27);
             // 
+            // headerToolStripDropDown
+            // 
+            headerToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            headerToolStripDropDown.Image = Properties.Resources.heading;
+            headerToolStripDropDown.ImageTransparentColor = Color.Magenta;
+            headerToolStripDropDown.Name = "headerToolStripDropDown";
+            headerToolStripDropDown.Size = new Size(33, 24);
+            headerToolStripDropDown.Text = "toolStripDropDownButton1";
+            headerToolStripDropDown.ToolTipText = "Header level";
+            // 
             // boldToolStripButton
             // 
             boldToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -489,21 +501,6 @@ namespace MarkEdit.App
             codeToolStripButton.Size = new Size(24, 24);
             codeToolStripButton.Text = "Code";
             // 
-            // headerToolStripDropDown
-            // 
-            headerToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            headerToolStripDropDown.Image = Properties.Resources.heading;
-            headerToolStripDropDown.ImageTransparentColor = Color.Magenta;
-            headerToolStripDropDown.Name = "headerToolStripDropDown";
-            headerToolStripDropDown.Size = new Size(33, 24);
-            headerToolStripDropDown.Text = "toolStripDropDownButton1";
-            headerToolStripDropDown.ToolTipText = "Header level";
-            // 
-            // toolStripSeparator9
-            // 
-            toolStripSeparator9.Name = "toolStripSeparator9";
-            toolStripSeparator9.Size = new Size(6, 27);
-            // 
             // linkToolStripButton
             // 
             linkToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
@@ -512,6 +509,11 @@ namespace MarkEdit.App
             linkToolStripButton.Name = "linkToolStripButton";
             linkToolStripButton.Size = new Size(24, 24);
             linkToolStripButton.Text = "Link";
+            // 
+            // toolStripSeparator9
+            // 
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new Size(6, 27);
             // 
             // toolStripButton1
             // 
@@ -530,6 +532,25 @@ namespace MarkEdit.App
             toolStripButton2.Name = "toolStripButton2";
             toolStripButton2.Size = new Size(24, 24);
             toolStripButton2.Text = "toolStripButton2";
+            // 
+            // newToolStripButton
+            // 
+            newToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newToolStripButton.Image = Properties.Resources._new;
+            newToolStripButton.ImageTransparentColor = Color.Magenta;
+            newToolStripButton.Name = "newToolStripButton";
+            newToolStripButton.Size = new Size(24, 24);
+            newToolStripButton.Text = "New item";
+            // 
+            // openToolStripButton
+            // 
+            openToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            openToolStripButton.Image = Properties.Resources.open;
+            openToolStripButton.ImageTransparentColor = Color.Magenta;
+            openToolStripButton.Name = "openToolStripButton";
+            openToolStripButton.Size = new Size(24, 24);
+            openToolStripButton.Text = "Open";
+            openToolStripButton.ToolTipText = "Open";
             // 
             // MainForm
             // 
@@ -618,5 +639,7 @@ namespace MarkEdit.App
         private ToolStripDropDownButton headerToolStripDropDown;
         private ToolStripButton toolStripButton1;
         private ToolStripButton toolStripButton2;
+        private ToolStripButton newToolStripButton;
+        private ToolStripButton openToolStripButton;
     }
 }
