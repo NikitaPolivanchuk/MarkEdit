@@ -1,6 +1,7 @@
 using MarkEdit.App.Events;
 using MarkEdit.Commands.Basic;
 using MarkEdit.Commands.Clipboard;
+using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
@@ -14,6 +15,8 @@ public partial class MainForm : Form
     private readonly CommandManager _commandManager;
     private readonly ITextEditor _editor;
     private readonly IClipboard _clipboard;
+    private readonly Document _document;
+    private readonly IFileService _fileService;
 
     public MainForm()
     {
@@ -22,10 +25,17 @@ public partial class MainForm : Form
         _editor = new TextBoxAdapter(textBox1);
         _commandManager = new CommandManager(200);
         _clipboard = new ClipboardAdapter();
+        _document = new Document();
+        _fileService = new FileService();
 
         textBox1.CharacterInserted += OnCharacterInsert;
         textBox1.CharacterDeleted += OnCharacterDelete;
         textBox1.TextChanged += OnTextChanged;
+        
+        newToolStripButton.Click += (_, _) => _commandManager.Execute(new NewCommand(_document, _editor));
+        openToolStripButton.Click += (_, _) => _commandManager.Execute(new OpenCommand(_document, _fileService, _editor));
+        saveToolStripButton.Click += (_, _) => _commandManager.Execute(new SaveCommand(_document, _fileService, _editor));
+        saveAsToolStripButton.Click += (_, _) => _commandManager.Execute(new SaveAsCommand(_document, _fileService, _editor));
 
         cutToolStripButton.Click += (_, _) => _commandManager.Execute(new CutCommand(_editor, _clipboard));
         copyToolStripButton.Click += (_, _) => _commandManager.Execute(new CopyCommand(_editor, _clipboard));
@@ -59,6 +69,9 @@ public partial class MainForm : Form
         var column = index - textBox1.GetFirstCharIndexOfCurrentLine();
         
         toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
+        
+        _document.Content = _editor.Text;
+        _document.IsDirty = true;
     }
 
     private void OnCharacterInsert(object? sender, CharChangeEventArgs e)
