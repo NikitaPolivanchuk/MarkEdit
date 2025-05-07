@@ -34,7 +34,7 @@ public abstract class WrapCommand : FormatCommand
             }
         }
         
-        ApplyFormatting(string.Join("\n", lines));
+        ApplyFormatting(string.Join(Environment.NewLine, lines));
     }
 
     public override void Undo()
@@ -42,9 +42,6 @@ public abstract class WrapCommand : FormatCommand
         Editor.Select(OriginalSelectionStart, _selectionLength);
         ApplyFormatting(OriginalText);
     }
-    
-    public override bool CanExecute() 
-        => OriginalSelectionLength > 0;
 
     protected abstract bool Wrapped(string text);
 
@@ -54,6 +51,12 @@ public abstract class WrapCommand : FormatCommand
         var trailing = GetTrailingSpaces(text);
         
         var core = text.Trim();
+
+        if (core.Length == 0)
+        {
+            return string.Empty;
+        }
+        
         core = Wrapped(core)
             ? core.Substring(_marker.Length, core.Length - _marker.Length * 2)
             : $"{_marker}{core}{_marker}";
@@ -66,25 +69,5 @@ public abstract class WrapCommand : FormatCommand
         _selectionLength = text.Length;
         Editor.SelectedText = text;
         Editor.Select(OriginalSelectionStart, _selectionLength);
-    }
-    
-    private static string GetLeadingSpaces(string line)
-    {
-        var index = 0;
-        while (index < line.Length && char.IsWhiteSpace(line[index]))
-        {
-            index++;
-        }
-        return line.Substring(0, index);
-    }
-    
-    private static string GetTrailingSpaces(string line)
-    {
-        var index = line.Length - 1;
-        while (index >= 0 && char.IsWhiteSpace(line[index]))
-        {
-            index--;
-        }
-        return line.Substring(index + 1);
     }
 }

@@ -34,18 +34,25 @@ public class TextBoxAdapter : ITextEditor
         get => _textBox.SelectionLength;
         set => _textBox.SelectionLength = value;
     }
+
+    public string[] Lines
+    {
+        get => _textBox.Lines;
+        set => _textBox.Lines = value;
+    }
     
     public void Select(int start, int length)
     {
         _textBox.Select(start, length);
     }
-    
-    public string CurrentLineText
+
+    public int GetLineFromCharIndex(int index)
     {
-        get
-        {
-            var lineIndex = _textBox.GetLineFromCharIndex(_textBox.SelectionStart);
-            return _textBox.Lines.Length > lineIndex ? _textBox.Lines[lineIndex] : string.Empty;
-        }
+        return _textBox.GetLineFromCharIndex(index);
+    }
+
+    public int GetFirstCharIndexFromLine(int index)
+    {
+        return _textBox.GetFirstCharIndexFromLine(index);
     }
 }

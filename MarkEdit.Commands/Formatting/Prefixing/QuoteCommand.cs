@@ -1,39 +1,22 @@
 using MarkEdit.Core;
-using MarkEdit.Core.Commands;
 
-namespace MarkEdit.Commands.Formatting;
+namespace MarkEdit.Commands.Formatting.Prefixing;
 
-public class QuoteCommand : IRevertibleCommand
+public class QuoteCommand : PrefixCommand
 {
-    private readonly ITextEditor _editor;
-    private readonly string _originalText;
-    private readonly int _selectionStart;
-    private readonly int _selectionLength;
-
     public QuoteCommand(ITextEditor editor)
-    {
-        _editor = editor;
-        _originalText = _editor.SelectedText;
-        _selectionStart = _editor.SelectionStart;
-        _selectionLength = _editor.SelectionLength;
-    }
-    
-    public void Execute()
-    {
-        _editor.Select(_selectionStart, _selectionLength);
-        _editor.SelectedText = $"> {_originalText}";
-    }
+        : base(">", editor)
+    { }
 
-    public void Undo()
+    protected override string TogglePrefix(string line)
     {
-        _editor.Select(_selectionStart, _selectionLength + 2);
-        _editor.SelectedText = _originalText;
+        var leading = GetLeadingSpaces(line);
+
+        var text = line.TrimStart();
+        text = Prefixed(text)
+            ? text.Substring(Prefix.Length)
+            : $"{Prefix}{text}";
+        
+        return string.Concat(leading, text);
     }
-    
-    public bool CanExecute() => _editor.SelectionLength > 0;
-
-
-    private bool Formatted(string line)
-        => line.StartsWith('>');
-    
 }

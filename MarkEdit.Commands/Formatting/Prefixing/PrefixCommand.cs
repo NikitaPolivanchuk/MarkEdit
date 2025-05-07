@@ -1,33 +1,60 @@
 using MarkEdit.Core;
-using MarkEdit.Core.Commands;
 
 namespace MarkEdit.Commands.Formatting.Prefixing;
 
 public abstract class PrefixCommand : FormatCommand
 {
-    private readonly string _prefix;
+    protected readonly string Prefix;
+    private int _selectionStart;
+    private int _selectionLength;
 
     protected PrefixCommand(string prefix, ITextEditor editor)
         :base(editor)
     {
-        _prefix = prefix;
+        Prefix = $"{prefix} ";
     }
     
     public override void Execute()
     {
-        Editor.Select(OriginalSelectionStart, OriginalSelectionLength);
-        Editor.SelectedText = $"{_prefix} {OriginalText}";
+        var startLine = Editor.GetLineFromCharIndex(OriginalSelectionStart);
+        var endLine = Editor.GetLineFromCharIndex(OriginalSelectionStart + OriginalSelectionLength - 1);
+
+        var start = Editor.GetFirstCharIndexFromLine(startLine);
+        var end = Editor.GetFirstCharIndexFromLine(endLine) + Editor.Lines[endLine].Length;
+
+        Editor.Select(start, end - start);
+
+        var lines = Editor.SelectedText.Split(Environment.NewLine); 
+        var prefixing = lines.Any(line => !Prefixed(line));
+
+        for (var i = 0; i < lines.Length; i++)
+        {
+            if (!prefixing || !Prefixed(lines[i]))
+            {
+                lines[i] = TogglePrefix(lines[i]);
+            }
+        }
+        var text = string.Join(Environment.NewLine, lines);
+        _selectionStart = start;
+        _selectionLength = text.Length;
+        
+        Editor.SelectedText = text;
+        Editor.Select(start, _selectionLength);
     }
 
     public override void Undo()
     {
-        Editor.Select(OriginalSelectionStart, OriginalSelectionLength + _prefix.Length + 1);
+        Editor.Select(_selectionStart, _selectionLength);
         Editor.SelectedText = OriginalText;
     }
-    
-    public override bool CanExecute() => Editor.SelectionLength > 0;
 
+    protected bool Prefixed(string line)
+    {
+        var text = line.Trim();
+        return text.StartsWith(Prefix);
+    }
 
-    private bool Formatted(string line)
-        => line.StartsWith(_prefix);
+    protected abstract string TogglePrefix(string line);
+
+    public override bool CanExecute() => true;
 }
