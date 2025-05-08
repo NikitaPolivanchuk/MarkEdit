@@ -12,54 +12,98 @@ namespace MarkEdit.App;
 
 public partial class MainForm : Form
 {
-    private readonly CommandManager _commandManager;
-    private readonly ITextEditor _editor;
-    private readonly IClipboard _clipboard;
-    private readonly Document _document;
-    private readonly IFileService _fileService;
+    private CommandManager _commandManager;
+    private ITextEditor _editor;
+    private IClipboard _clipboard;
+    private Document _document;
+    private IFileService _fileService;
 
     public MainForm()
     {
         InitializeComponent();
-
+        InitializeServices();
+        RegisterTextEditorEvents();
+        WireUpQuickAccessCommands();
+        WireUpMenuStripCommands();
+    }
+    
+    private void InitializeServices()
+    {
         _editor = new TextBoxAdapter(textBox1);
         _commandManager = new CommandManager(200);
         _clipboard = new ClipboardAdapter();
         _document = new Document();
         _fileService = new FileService();
-
+    }
+    
+    private void RegisterTextEditorEvents()
+    {
         textBox1.CharacterInserted += OnCharacterInsert;
         textBox1.CharacterDeleted += OnCharacterDelete;
         textBox1.TextChanged += OnTextChanged;
-        
-        newToolStripButton.Click += (_, _) => _commandManager.Execute(new NewCommand(_document, _editor));
-        openToolStripButton.Click += (_, _) => _commandManager.Execute(new OpenCommand(_document, _fileService, _editor));
-        saveToolStripButton.Click += (_, _) => _commandManager.Execute(new SaveCommand(_document, _fileService, _editor));
-        saveAsToolStripButton.Click += (_, _) => _commandManager.Execute(new SaveAsCommand(_document, _fileService, _editor));
+    }
 
-        cutToolStripButton.Click += (_, _) => _commandManager.Execute(new CutCommand(_editor, _clipboard));
-        copyToolStripButton.Click += (_, _) => _commandManager.Execute(new CopyCommand(_editor, _clipboard));
-        pasteToolStripMenuItem.Click += (_, _) => _commandManager.Execute(new PasteCommand(_editor, _clipboard));
-        undoToolStripButton.Click += (_, _) => _commandManager.Undo();
-        redoToolStripButton.Click += (_, _) => _commandManager.Redo();
-        boldToolStripButton.Click += (_, _) => _commandManager.Execute(new BoldCommand(_editor));
-        italicToolStripButton.Click += (_, _) => _commandManager.Execute(new ItalicCommand(_editor));
-        quoteToolStripButton.Click += (_, _) => _commandManager.Execute(new QuoteCommand(_editor));
-        codeToolStripButton.Click += (_, _) => _commandManager.Execute(new CodeCommand(_editor));
-        
-        foreach (var level in Enumerable.Range(1, 6))
-        {
-            headerToolStripDropDown.DropDownItems.Add(
-                $"Header {level}", 
-                null,
-                (_, _) => _commandManager.Execute(new HeaderCommand(_editor, level)));
-        }
+    private void WireUpQuickAccessCommands()
+    {
+        //File commands
+        BindClick(newQuickAccessButton, () => new NewCommand(_document, _editor));
+        BindClick(openQuickAccessButton, () => new OpenCommand(_document, _fileService, _editor));
+        BindClick(saveQuickAccessButton, () => new SaveCommand(_document, _fileService, _editor));
+        BindClick(saveAsQuickAccessButton, () => new SaveAsCommand(_document, _fileService, _editor));
+        //Clipboard commands
+        BindClick(cutQuickAccessButton, () => new CutCommand(_editor, _clipboard));
+        BindClick(copyQuickAccessButton, () => new CopyCommand(_editor, _clipboard));
+        BindClick(pasteQuickAccessButton, () => new PasteCommand(_editor, _clipboard));
+        //History commands
+        BindClick(undoQuickAccessButton, _commandManager.Undo);
+        BindClick(redoQuickAccessButton, _commandManager.Redo);
+        //Formatting commands
+        BindClick(boldQuickAccessButton, () => new BoldCommand(_editor));
+        BindClick(italicQuickAccessButton, () => new ItalicCommand(_editor));
+        BindClick(quoteQuickAccessButton, () => new QuoteCommand(_editor));
+        BindClick(codeQuickAccessButton, () => new CodeCommand(_editor));
+        BindClick(h1QuickAccessItem, () => new HeaderCommand(_editor, 1));
+        BindClick(h2QuickAccessItem, () => new HeaderCommand(_editor, 2));
+        BindClick(h3QuickAccessItem, () => new HeaderCommand(_editor, 3));
+        BindClick(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
+        BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
+        BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
+    }
 
-        cutToolStripMenuItem.Click += (_, _) => _commandManager.Execute(new CutCommand(_editor, _clipboard));
-        copyToolStripMenuItem.Click += (_, _) => _commandManager.Execute(new CopyCommand(_editor, _clipboard));
-        pasteToolStripMenuItem.Click += (_, _) => _commandManager.Execute(new PasteCommand(_editor, _clipboard));
-        undoToolStripMenuItem.Click += (_, _) => _commandManager.Undo();
-        redoToolStripMenuItem.Click += (_, _) => _commandManager.Redo();
+    private void WireUpMenuStripCommands()
+    {
+        // File commands
+        BindClick(newToolStripMenuItem, () => new NewCommand(_document, _editor));
+        BindClick(openToolStripMenuItem, () => new OpenCommand(_document, _fileService, _editor));
+        BindClick(saveToolStripMenuItem, () => new SaveCommand(_document, _fileService, _editor));
+        BindClick(saveAsToolStripMenuItem, () => new SaveAsCommand(_document, _fileService, _editor));
+        BindClick(exitToolStripMenuItem, Application.Exit);
+        // Clipboard commands
+        BindClick(cutToolStripMenuItem, () => new CutCommand(_editor, _clipboard));
+        BindClick(copyToolStripMenuItem, () => new CopyCommand(_editor, _clipboard));
+        BindClick(pasteToolStripMenuItem, () => new PasteCommand(_editor, _clipboard));
+        // History commands
+        BindClick(undoToolStripMenuItem, _commandManager.Undo);
+        BindClick(redoToolStripMenuItem, _commandManager.Redo);
+        // Formatting commands
+        BindClick(boldToolStripMenuItem, () => new BoldCommand(_editor));
+        BindClick(italicToolStripMenuItem, () => new ItalicCommand(_editor));
+        BindClick(h1ToolStripMenuItem, () => new HeaderCommand(_editor, 1));
+        BindClick(h2ToolStripMenuItem, () => new HeaderCommand(_editor, 2));
+        BindClick(h3ToolStripMenuItem, () => new HeaderCommand(_editor, 3));
+        BindClick(h4ToolStripMenuItem, () => new HeaderCommand(_editor, 4));
+        BindClick(h5ToolStripMenuItem, () => new HeaderCommand(_editor, 5));
+        BindClick(h6ToolStripMenuItem, () => new HeaderCommand(_editor, 6));
+    }
+    
+    private void BindClick(ToolStripItem item, Func<ICommand> commandFactory)
+    {
+        item.Click += (_, _) => _commandManager.Execute(commandFactory());
+    }
+
+    private void BindClick(ToolStripItem item, Action action)
+    {
+        item.Click += (_, _) => action();
     }
 
     private void OnTextChanged(object? sender, EventArgs e)
@@ -67,9 +111,9 @@ public partial class MainForm : Form
         var index = textBox1.SelectionStart;
         var line = textBox1.GetLineFromCharIndex(index);
         var column = index - textBox1.GetFirstCharIndexOfCurrentLine();
-        
+
         toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
-        
+
         _document.Content = _editor.Text;
         _document.IsDirty = true;
     }

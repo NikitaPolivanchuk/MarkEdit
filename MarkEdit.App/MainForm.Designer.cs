@@ -30,7 +30,7 @@ namespace MarkEdit.App
         /// </summary>
         private void InitializeComponent()
         {
-            menuStrip1 = new MenuStrip();
+            menuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             newToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
@@ -50,6 +50,11 @@ namespace MarkEdit.App
             findToolStripMenuItem = new ToolStripMenuItem();
             replaceToolStripMenuItem = new ToolStripMenuItem();
             goToToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator10 = new ToolStripSeparator();
+            insertToolStripMenuItem = new ToolStripMenuItem();
+            linkToolStripMenuItem = new ToolStripMenuItem();
+            imageToolStripMenuItem = new ToolStripMenuItem();
+            blockquoteToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator2 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
@@ -58,56 +63,75 @@ namespace MarkEdit.App
             zoomOutToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
             restoreToolStripMenuItem = new ToolStripMenuItem();
+            formatToolStripMenuItem = new ToolStripMenuItem();
+            boldToolStripMenuItem = new ToolStripMenuItem();
+            italicToolStripMenuItem = new ToolStripMenuItem();
+            inlineCodeToolStripMenuItem = new ToolStripMenuItem();
+            headingToolStripMenuItem = new ToolStripMenuItem();
+            h1ToolStripMenuItem = new ToolStripMenuItem();
+            h2ToolStripMenuItem = new ToolStripMenuItem();
+            h3ToolStripMenuItem = new ToolStripMenuItem();
+            h4ToolStripMenuItem = new ToolStripMenuItem();
+            h5ToolStripMenuItem = new ToolStripMenuItem();
+            h6ToolStripMenuItem = new ToolStripMenuItem();
+            bulletToolStripMenuItem = new ToolStripMenuItem();
+            numberedListToolStripMenuItem = new ToolStripMenuItem();
             toolsToolStripMenuItem = new ToolStripMenuItem();
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             textBox1 = new ExtendedTextBox();
             webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
-            statusStrip1 = new StatusStrip();
+            statusStrip = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
-            toolStrip1 = new ToolStrip();
-            saveToolStripButton = new ToolStripButton();
-            saveAsToolStripButton = new ToolStripButton();
+            quickAccess = new ToolStrip();
+            newQuickAccessButton = new ToolStripButton();
+            openQuickAccessButton = new ToolStripButton();
+            saveQuickAccessButton = new ToolStripButton();
+            saveAsQuickAccessButton = new ToolStripButton();
             toolStripSeparator8 = new ToolStripSeparator();
-            cutToolStripButton = new ToolStripButton();
-            copyToolStripButton = new ToolStripButton();
-            pasteToolStripButton = new ToolStripButton();
+            cutQuickAccessButton = new ToolStripButton();
+            copyQuickAccessButton = new ToolStripButton();
+            pasteQuickAccessButton = new ToolStripButton();
             toolStripSeparator7 = new ToolStripSeparator();
-            undoToolStripButton = new ToolStripButton();
-            redoToolStripButton = new ToolStripButton();
+            undoQuickAccessButton = new ToolStripButton();
+            redoQuickAccessButton = new ToolStripButton();
             toolStripSeparator6 = new ToolStripSeparator();
-            headerToolStripDropDown = new ToolStripDropDownButton();
-            boldToolStripButton = new ToolStripButton();
-            italicToolStripButton = new ToolStripButton();
-            quoteToolStripButton = new ToolStripButton();
-            codeToolStripButton = new ToolStripButton();
+            headingToolStripDropDown = new ToolStripDropDownButton();
+            h1QuickAccessItem = new ToolStripMenuItem();
+            h2QuickAccessItem = new ToolStripMenuItem();
+            h3QuickAccessItem = new ToolStripMenuItem();
+            h4QuickAccessItem = new ToolStripMenuItem();
+            h5QuickAccessItem = new ToolStripMenuItem();
+            h6QuickAccessItem = new ToolStripMenuItem();
+            boldQuickAccessButton = new ToolStripButton();
+            italicQuickAccessButton = new ToolStripButton();
+            quoteQuickAccessButton = new ToolStripButton();
+            codeQuickAccessButton = new ToolStripButton();
             linkToolStripButton = new ToolStripButton();
             toolStripSeparator9 = new ToolStripSeparator();
             toolStripButton1 = new ToolStripButton();
             toolStripButton2 = new ToolStripButton();
-            newToolStripButton = new ToolStripButton();
-            openToolStripButton = new ToolStripButton();
-            menuStrip1.SuspendLayout();
+            menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
-            statusStrip1.SuspendLayout();
-            toolStrip1.SuspendLayout();
+            statusStrip.SuspendLayout();
+            quickAccess.SuspendLayout();
             SuspendLayout();
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, viewToolStripMenuItem, toolsToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Padding = new Padding(5, 2, 0, 2);
-            menuStrip1.Size = new Size(700, 24);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
+            menuStrip.ImageScalingSize = new Size(20, 20);
+            menuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem, viewToolStripMenuItem, formatToolStripMenuItem, toolsToolStripMenuItem });
+            menuStrip.Location = new Point(0, 0);
+            menuStrip.Name = "menuStrip";
+            menuStrip.Padding = new Padding(5, 2, 0, 2);
+            menuStrip.Size = new Size(700, 24);
+            menuStrip.TabIndex = 0;
+            menuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -164,7 +188,7 @@ namespace MarkEdit.App
             // 
             // editToolStripMenuItem
             // 
-            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { undoToolStripMenuItem, redoToolStripMenuItem, toolStripSeparator3, cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, toolStripSeparator4, findToolStripMenuItem, replaceToolStripMenuItem, goToToolStripMenuItem, toolStripSeparator2, selectAllToolStripMenuItem });
+            editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { undoToolStripMenuItem, redoToolStripMenuItem, toolStripSeparator3, cutToolStripMenuItem, copyToolStripMenuItem, pasteToolStripMenuItem, toolStripSeparator4, findToolStripMenuItem, replaceToolStripMenuItem, goToToolStripMenuItem, toolStripSeparator10, insertToolStripMenuItem, toolStripSeparator2, selectAllToolStripMenuItem });
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(39, 20);
             editToolStripMenuItem.Text = "&Edit";
@@ -235,6 +259,36 @@ namespace MarkEdit.App
             goToToolStripMenuItem.Size = new Size(144, 22);
             goToToolStripMenuItem.Text = "Go to";
             // 
+            // toolStripSeparator10
+            // 
+            toolStripSeparator10.Name = "toolStripSeparator10";
+            toolStripSeparator10.Size = new Size(141, 6);
+            // 
+            // insertToolStripMenuItem
+            // 
+            insertToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { linkToolStripMenuItem, imageToolStripMenuItem, blockquoteToolStripMenuItem });
+            insertToolStripMenuItem.Name = "insertToolStripMenuItem";
+            insertToolStripMenuItem.Size = new Size(144, 22);
+            insertToolStripMenuItem.Text = "Insert";
+            // 
+            // linkToolStripMenuItem
+            // 
+            linkToolStripMenuItem.Name = "linkToolStripMenuItem";
+            linkToolStripMenuItem.Size = new Size(134, 22);
+            linkToolStripMenuItem.Text = "Link";
+            // 
+            // imageToolStripMenuItem
+            // 
+            imageToolStripMenuItem.Name = "imageToolStripMenuItem";
+            imageToolStripMenuItem.Size = new Size(134, 22);
+            imageToolStripMenuItem.Text = "Image";
+            // 
+            // blockquoteToolStripMenuItem
+            // 
+            blockquoteToolStripMenuItem.Name = "blockquoteToolStripMenuItem";
+            blockquoteToolStripMenuItem.Size = new Size(134, 22);
+            blockquoteToolStripMenuItem.Text = "Blockquote";
+            // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
@@ -282,6 +336,95 @@ namespace MarkEdit.App
             restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
             restoreToolStripMenuItem.Size = new Size(127, 22);
             restoreToolStripMenuItem.Text = "Restore";
+            // 
+            // formatToolStripMenuItem
+            // 
+            formatToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { boldToolStripMenuItem, italicToolStripMenuItem, inlineCodeToolStripMenuItem, headingToolStripMenuItem, bulletToolStripMenuItem, numberedListToolStripMenuItem });
+            formatToolStripMenuItem.Name = "formatToolStripMenuItem";
+            formatToolStripMenuItem.Size = new Size(57, 20);
+            formatToolStripMenuItem.Text = "F&ormat";
+            // 
+            // boldToolStripMenuItem
+            // 
+            boldToolStripMenuItem.Name = "boldToolStripMenuItem";
+            boldToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.B;
+            boldToolStripMenuItem.Size = new Size(200, 22);
+            boldToolStripMenuItem.Text = "Bold";
+            // 
+            // italicToolStripMenuItem
+            // 
+            italicToolStripMenuItem.Name = "italicToolStripMenuItem";
+            italicToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.I;
+            italicToolStripMenuItem.Size = new Size(200, 22);
+            italicToolStripMenuItem.Text = "Italic";
+            // 
+            // inlineCodeToolStripMenuItem
+            // 
+            inlineCodeToolStripMenuItem.Name = "inlineCodeToolStripMenuItem";
+            inlineCodeToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Oem3;
+            inlineCodeToolStripMenuItem.Size = new Size(200, 22);
+            inlineCodeToolStripMenuItem.Text = "Inline Code";
+            // 
+            // headingToolStripMenuItem
+            // 
+            headingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { h1ToolStripMenuItem, h2ToolStripMenuItem, h3ToolStripMenuItem, h4ToolStripMenuItem, h5ToolStripMenuItem, h6ToolStripMenuItem });
+            headingToolStripMenuItem.Name = "headingToolStripMenuItem";
+            headingToolStripMenuItem.Size = new Size(200, 22);
+            headingToolStripMenuItem.Text = "Heading Levels";
+            // 
+            // h1ToolStripMenuItem
+            // 
+            h1ToolStripMenuItem.Name = "h1ToolStripMenuItem";
+            h1ToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D1;
+            h1ToolStripMenuItem.Size = new Size(152, 22);
+            h1ToolStripMenuItem.Text = "H1";
+            // 
+            // h2ToolStripMenuItem
+            // 
+            h2ToolStripMenuItem.Name = "h2ToolStripMenuItem";
+            h2ToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D2;
+            h2ToolStripMenuItem.Size = new Size(152, 22);
+            h2ToolStripMenuItem.Text = "H2";
+            // 
+            // h3ToolStripMenuItem
+            // 
+            h3ToolStripMenuItem.Name = "h3ToolStripMenuItem";
+            h3ToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D3;
+            h3ToolStripMenuItem.Size = new Size(152, 22);
+            h3ToolStripMenuItem.Text = "H3";
+            // 
+            // h4ToolStripMenuItem
+            // 
+            h4ToolStripMenuItem.Name = "h4ToolStripMenuItem";
+            h4ToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D4;
+            h4ToolStripMenuItem.Size = new Size(152, 22);
+            h4ToolStripMenuItem.Text = "H4";
+            // 
+            // h5ToolStripMenuItem
+            // 
+            h5ToolStripMenuItem.Name = "h5ToolStripMenuItem";
+            h5ToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D5;
+            h5ToolStripMenuItem.Size = new Size(152, 22);
+            h5ToolStripMenuItem.Text = "H5";
+            // 
+            // h6ToolStripMenuItem
+            // 
+            h6ToolStripMenuItem.Name = "h6ToolStripMenuItem";
+            h6ToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.D6;
+            h6ToolStripMenuItem.Size = new Size(152, 22);
+            h6ToolStripMenuItem.Text = "H6";
+            // 
+            // bulletToolStripMenuItem
+            // 
+            bulletToolStripMenuItem.Name = "bulletToolStripMenuItem";
+            bulletToolStripMenuItem.Size = new Size(200, 22);
+            bulletToolStripMenuItem.Text = "Bullet List";
+            // 
+            // numberedListToolStripMenuItem
+            // 
+            numberedListToolStripMenuItem.Name = "numberedListToolStripMenuItem";
+            numberedListToolStripMenuItem.Size = new Size(200, 22);
+            numberedListToolStripMenuItem.Text = "Numbered List";
             // 
             // toolsToolStripMenuItem
             // 
@@ -346,16 +489,16 @@ namespace MarkEdit.App
             webView21.TabIndex = 0;
             webView21.ZoomFactor = 1D;
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            statusStrip1.ImageScalingSize = new Size(20, 20);
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
-            statusStrip1.Location = new Point(0, 316);
-            statusStrip1.Name = "statusStrip1";
-            statusStrip1.Padding = new Padding(1, 0, 12, 0);
-            statusStrip1.Size = new Size(700, 22);
-            statusStrip1.TabIndex = 2;
-            statusStrip1.Text = "statusStrip1";
+            statusStrip.ImageScalingSize = new Size(20, 20);
+            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
+            statusStrip.Location = new Point(0, 316);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Padding = new Padding(1, 0, 12, 0);
+            statusStrip.Size = new Size(700, 22);
+            statusStrip.TabIndex = 2;
+            statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel
             // 
@@ -363,143 +506,199 @@ namespace MarkEdit.App
             toolStripStatusLabel.Size = new Size(62, 17);
             toolStripStatusLabel.Text = "Ln 1, Col 1";
             // 
-            // toolStrip1
+            // quickAccess
             // 
-            toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { newToolStripButton, openToolStripButton, saveToolStripButton, saveAsToolStripButton, toolStripSeparator8, cutToolStripButton, copyToolStripButton, pasteToolStripButton, toolStripSeparator7, undoToolStripButton, redoToolStripButton, toolStripSeparator6, headerToolStripDropDown, boldToolStripButton, italicToolStripButton, quoteToolStripButton, codeToolStripButton, linkToolStripButton, toolStripSeparator9, toolStripButton1, toolStripButton2 });
-            toolStrip1.Location = new Point(0, 24);
-            toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(700, 27);
-            toolStrip1.TabIndex = 3;
-            toolStrip1.Text = "toolStrip1";
+            quickAccess.ImageScalingSize = new Size(20, 20);
+            quickAccess.Items.AddRange(new ToolStripItem[] { newQuickAccessButton, openQuickAccessButton, saveQuickAccessButton, saveAsQuickAccessButton, toolStripSeparator8, cutQuickAccessButton, copyQuickAccessButton, pasteQuickAccessButton, toolStripSeparator7, undoQuickAccessButton, redoQuickAccessButton, toolStripSeparator6, headingToolStripDropDown, boldQuickAccessButton, italicQuickAccessButton, quoteQuickAccessButton, codeQuickAccessButton, linkToolStripButton, toolStripSeparator9, toolStripButton1, toolStripButton2 });
+            quickAccess.Location = new Point(0, 24);
+            quickAccess.Name = "quickAccess";
+            quickAccess.Size = new Size(700, 27);
+            quickAccess.TabIndex = 3;
+            quickAccess.Text = "toolStrip1";
             // 
-            // saveToolStripButton
+            // newQuickAccessButton
             // 
-            saveToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            saveToolStripButton.Image = Properties.Resources.save;
-            saveToolStripButton.ImageTransparentColor = Color.Magenta;
-            saveToolStripButton.Name = "saveToolStripButton";
-            saveToolStripButton.Size = new Size(24, 24);
-            saveToolStripButton.Text = "Save";
+            newQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            newQuickAccessButton.Image = Properties.Resources._new;
+            newQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            newQuickAccessButton.Name = "newQuickAccessButton";
+            newQuickAccessButton.Size = new Size(24, 24);
+            newQuickAccessButton.Text = "New item";
             // 
-            // saveAsToolStripButton
+            // openQuickAccessButton
             // 
-            saveAsToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            saveAsToolStripButton.Image = Properties.Resources.save_as;
-            saveAsToolStripButton.ImageTransparentColor = Color.Magenta;
-            saveAsToolStripButton.Name = "saveAsToolStripButton";
-            saveAsToolStripButton.Size = new Size(24, 24);
-            saveAsToolStripButton.Text = "Save as";
+            openQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            openQuickAccessButton.Image = Properties.Resources.open;
+            openQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            openQuickAccessButton.Name = "openQuickAccessButton";
+            openQuickAccessButton.Size = new Size(24, 24);
+            openQuickAccessButton.Text = "Open";
+            openQuickAccessButton.ToolTipText = "Open";
+            // 
+            // saveQuickAccessButton
+            // 
+            saveQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            saveQuickAccessButton.Image = Properties.Resources.save;
+            saveQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            saveQuickAccessButton.Name = "saveQuickAccessButton";
+            saveQuickAccessButton.Size = new Size(24, 24);
+            saveQuickAccessButton.Text = "Save";
+            // 
+            // saveAsQuickAccessButton
+            // 
+            saveAsQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            saveAsQuickAccessButton.Image = Properties.Resources.save_as;
+            saveAsQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            saveAsQuickAccessButton.Name = "saveAsQuickAccessButton";
+            saveAsQuickAccessButton.Size = new Size(24, 24);
+            saveAsQuickAccessButton.Text = "Save as";
             // 
             // toolStripSeparator8
             // 
             toolStripSeparator8.Name = "toolStripSeparator8";
             toolStripSeparator8.Size = new Size(6, 27);
             // 
-            // cutToolStripButton
+            // cutQuickAccessButton
             // 
-            cutToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            cutToolStripButton.Image = Properties.Resources.cut;
-            cutToolStripButton.ImageTransparentColor = Color.Magenta;
-            cutToolStripButton.Name = "cutToolStripButton";
-            cutToolStripButton.Size = new Size(24, 24);
-            cutToolStripButton.Text = "Cut";
+            cutQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            cutQuickAccessButton.Image = Properties.Resources.cut;
+            cutQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            cutQuickAccessButton.Name = "cutQuickAccessButton";
+            cutQuickAccessButton.Size = new Size(24, 24);
+            cutQuickAccessButton.Text = "Cut";
             // 
-            // copyToolStripButton
+            // copyQuickAccessButton
             // 
-            copyToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            copyToolStripButton.Image = Properties.Resources.copy;
-            copyToolStripButton.ImageTransparentColor = Color.Magenta;
-            copyToolStripButton.Name = "copyToolStripButton";
-            copyToolStripButton.Size = new Size(24, 24);
-            copyToolStripButton.Text = "Copy";
+            copyQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            copyQuickAccessButton.Image = Properties.Resources.copy;
+            copyQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            copyQuickAccessButton.Name = "copyQuickAccessButton";
+            copyQuickAccessButton.Size = new Size(24, 24);
+            copyQuickAccessButton.Text = "Copy";
             // 
-            // pasteToolStripButton
+            // pasteQuickAccessButton
             // 
-            pasteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            pasteToolStripButton.Image = Properties.Resources.paste;
-            pasteToolStripButton.ImageTransparentColor = Color.Magenta;
-            pasteToolStripButton.Name = "pasteToolStripButton";
-            pasteToolStripButton.Size = new Size(24, 24);
-            pasteToolStripButton.Text = "Paste";
+            pasteQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            pasteQuickAccessButton.Image = Properties.Resources.paste;
+            pasteQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            pasteQuickAccessButton.Name = "pasteQuickAccessButton";
+            pasteQuickAccessButton.Size = new Size(24, 24);
+            pasteQuickAccessButton.Text = "Paste";
             // 
             // toolStripSeparator7
             // 
             toolStripSeparator7.Name = "toolStripSeparator7";
             toolStripSeparator7.Size = new Size(6, 27);
             // 
-            // undoToolStripButton
+            // undoQuickAccessButton
             // 
-            undoToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            undoToolStripButton.Image = Properties.Resources.undo;
-            undoToolStripButton.ImageTransparentColor = Color.Magenta;
-            undoToolStripButton.Name = "undoToolStripButton";
-            undoToolStripButton.Size = new Size(24, 24);
-            undoToolStripButton.Text = "Undo";
-            undoToolStripButton.ToolTipText = "Undo";
+            undoQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            undoQuickAccessButton.Image = Properties.Resources.undo;
+            undoQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            undoQuickAccessButton.Name = "undoQuickAccessButton";
+            undoQuickAccessButton.Size = new Size(24, 24);
+            undoQuickAccessButton.Text = "Undo";
+            undoQuickAccessButton.ToolTipText = "Undo";
             // 
-            // redoToolStripButton
+            // redoQuickAccessButton
             // 
-            redoToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            redoToolStripButton.Image = Properties.Resources.redo;
-            redoToolStripButton.ImageTransparentColor = Color.Magenta;
-            redoToolStripButton.Name = "redoToolStripButton";
-            redoToolStripButton.Size = new Size(24, 24);
-            redoToolStripButton.Text = "Redo";
-            redoToolStripButton.ToolTipText = "Redo";
+            redoQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            redoQuickAccessButton.Image = Properties.Resources.redo;
+            redoQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            redoQuickAccessButton.Name = "redoQuickAccessButton";
+            redoQuickAccessButton.Size = new Size(24, 24);
+            redoQuickAccessButton.Text = "Redo";
+            redoQuickAccessButton.ToolTipText = "Redo";
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
             toolStripSeparator6.Size = new Size(6, 27);
             // 
-            // headerToolStripDropDown
+            // headingToolStripDropDown
             // 
-            headerToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            headerToolStripDropDown.Image = Properties.Resources.heading;
-            headerToolStripDropDown.ImageTransparentColor = Color.Magenta;
-            headerToolStripDropDown.Name = "headerToolStripDropDown";
-            headerToolStripDropDown.Size = new Size(33, 24);
-            headerToolStripDropDown.Text = "toolStripDropDownButton1";
-            headerToolStripDropDown.ToolTipText = "Header level";
+            headingToolStripDropDown.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            headingToolStripDropDown.DropDownItems.AddRange(new ToolStripItem[] { h1QuickAccessItem, h2QuickAccessItem, h3QuickAccessItem, h4QuickAccessItem, h5QuickAccessItem, h6QuickAccessItem });
+            headingToolStripDropDown.Image = Properties.Resources.heading;
+            headingToolStripDropDown.ImageTransparentColor = Color.Magenta;
+            headingToolStripDropDown.Name = "headingToolStripDropDown";
+            headingToolStripDropDown.Size = new Size(33, 24);
+            headingToolStripDropDown.Text = "toolStripDropDownButton1";
+            headingToolStripDropDown.ToolTipText = "Heading level";
             // 
-            // boldToolStripButton
+            // h1QuickAccessItem
             // 
-            boldToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            boldToolStripButton.Image = Properties.Resources.bold;
-            boldToolStripButton.ImageTransparentColor = Color.Magenta;
-            boldToolStripButton.Name = "boldToolStripButton";
-            boldToolStripButton.Size = new Size(24, 24);
-            boldToolStripButton.Text = "Bold";
-            boldToolStripButton.ToolTipText = "Bold";
+            h1QuickAccessItem.Name = "h1QuickAccessItem";
+            h1QuickAccessItem.Size = new Size(89, 22);
+            h1QuickAccessItem.Text = "H1";
             // 
-            // italicToolStripButton
+            // h2QuickAccessItem
             // 
-            italicToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            italicToolStripButton.Image = Properties.Resources.italic;
-            italicToolStripButton.ImageTransparentColor = Color.Magenta;
-            italicToolStripButton.Name = "italicToolStripButton";
-            italicToolStripButton.Size = new Size(24, 24);
-            italicToolStripButton.Text = "Italic";
-            italicToolStripButton.ToolTipText = "Italic";
+            h2QuickAccessItem.Name = "h2QuickAccessItem";
+            h2QuickAccessItem.Size = new Size(89, 22);
+            h2QuickAccessItem.Text = "H2";
             // 
-            // quoteToolStripButton
+            // h3QuickAccessItem
             // 
-            quoteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            quoteToolStripButton.Image = Properties.Resources.quote;
-            quoteToolStripButton.ImageTransparentColor = Color.Magenta;
-            quoteToolStripButton.Name = "quoteToolStripButton";
-            quoteToolStripButton.Size = new Size(24, 24);
-            quoteToolStripButton.Text = "Quote";
+            h3QuickAccessItem.Name = "h3QuickAccessItem";
+            h3QuickAccessItem.Size = new Size(89, 22);
+            h3QuickAccessItem.Text = "H3";
             // 
-            // codeToolStripButton
+            // h4QuickAccessItem
             // 
-            codeToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            codeToolStripButton.Image = Properties.Resources.code;
-            codeToolStripButton.ImageTransparentColor = Color.Magenta;
-            codeToolStripButton.Name = "codeToolStripButton";
-            codeToolStripButton.Size = new Size(24, 24);
-            codeToolStripButton.Text = "Code";
+            h4QuickAccessItem.Name = "h4QuickAccessItem";
+            h4QuickAccessItem.Size = new Size(89, 22);
+            h4QuickAccessItem.Text = "H4";
+            // 
+            // h5QuickAccessItem
+            // 
+            h5QuickAccessItem.Name = "h5QuickAccessItem";
+            h5QuickAccessItem.Size = new Size(89, 22);
+            h5QuickAccessItem.Text = "H5";
+            // 
+            // h6QuickAccessItem
+            // 
+            h6QuickAccessItem.Name = "h6QuickAccessItem";
+            h6QuickAccessItem.Size = new Size(89, 22);
+            h6QuickAccessItem.Text = "H6";
+            // 
+            // boldQuickAccessButton
+            // 
+            boldQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            boldQuickAccessButton.Image = Properties.Resources.bold;
+            boldQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            boldQuickAccessButton.Name = "boldQuickAccessButton";
+            boldQuickAccessButton.Size = new Size(24, 24);
+            boldQuickAccessButton.Text = "Bold";
+            boldQuickAccessButton.ToolTipText = "Bold";
+            // 
+            // italicQuickAccessButton
+            // 
+            italicQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            italicQuickAccessButton.Image = Properties.Resources.italic;
+            italicQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            italicQuickAccessButton.Name = "italicQuickAccessButton";
+            italicQuickAccessButton.Size = new Size(24, 24);
+            italicQuickAccessButton.Text = "Italic";
+            italicQuickAccessButton.ToolTipText = "Italic";
+            // 
+            // quoteQuickAccessButton
+            // 
+            quoteQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            quoteQuickAccessButton.Image = Properties.Resources.quote;
+            quoteQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            quoteQuickAccessButton.Name = "quoteQuickAccessButton";
+            quoteQuickAccessButton.Size = new Size(24, 24);
+            quoteQuickAccessButton.Text = "Quote";
+            // 
+            // codeQuickAccessButton
+            // 
+            codeQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            codeQuickAccessButton.Image = Properties.Resources.code;
+            codeQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            codeQuickAccessButton.Name = "codeQuickAccessButton";
+            codeQuickAccessButton.Size = new Size(24, 24);
+            codeQuickAccessButton.Text = "Code";
             // 
             // linkToolStripButton
             // 
@@ -533,57 +732,38 @@ namespace MarkEdit.App
             toolStripButton2.Size = new Size(24, 24);
             toolStripButton2.Text = "toolStripButton2";
             // 
-            // newToolStripButton
-            // 
-            newToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            newToolStripButton.Image = Properties.Resources._new;
-            newToolStripButton.ImageTransparentColor = Color.Magenta;
-            newToolStripButton.Name = "newToolStripButton";
-            newToolStripButton.Size = new Size(24, 24);
-            newToolStripButton.Text = "New item";
-            // 
-            // openToolStripButton
-            // 
-            openToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            openToolStripButton.Image = Properties.Resources.open;
-            openToolStripButton.ImageTransparentColor = Color.Magenta;
-            openToolStripButton.Name = "openToolStripButton";
-            openToolStripButton.Size = new Size(24, 24);
-            openToolStripButton.Text = "Open";
-            openToolStripButton.ToolTipText = "Open";
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
-            Controls.Add(toolStrip1);
-            Controls.Add(statusStrip1);
+            Controls.Add(quickAccess);
+            Controls.Add(statusStrip);
             Controls.Add(splitContainer1);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
+            Controls.Add(menuStrip);
+            MainMenuStrip = menuStrip;
             Margin = new Padding(3, 2, 3, 2);
             Name = "MainForm";
             Text = "MarkEdit";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
+            menuStrip.ResumeLayout(false);
+            menuStrip.PerformLayout();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel1.PerformLayout();
             splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
-            statusStrip1.ResumeLayout(false);
-            statusStrip1.PerformLayout();
-            toolStrip1.ResumeLayout(false);
-            toolStrip1.PerformLayout();
+            statusStrip.ResumeLayout(false);
+            statusStrip.PerformLayout();
+            quickAccess.ResumeLayout(false);
+            quickAccess.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private MenuStrip menuStrip1;
+        private MenuStrip menuStrip;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem newToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
@@ -617,29 +797,53 @@ namespace MarkEdit.App
         private SplitContainer splitContainer1;
         private ExtendedTextBox textBox1;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
-        private StatusStrip statusStrip1;
-        private ToolStrip toolStrip1;
-        private ToolStripButton boldToolStripButton;
-        private ToolStripButton undoToolStripButton;
-        private ToolStripButton redoToolStripButton;
-        private ToolStripButton italicToolStripButton;
+        private StatusStrip statusStrip;
+        private ToolStrip quickAccess;
+        private ToolStripButton boldQuickAccessButton;
+        private ToolStripButton undoQuickAccessButton;
+        private ToolStripButton redoQuickAccessButton;
+        private ToolStripButton italicQuickAccessButton;
         private ToolStripSeparator toolStripSeparator6;
-        private ToolStripButton saveToolStripButton;
-        private ToolStripButton saveAsToolStripButton;
-        private ToolStripButton cutToolStripButton;
-        private ToolStripButton copyToolStripButton;
-        private ToolStripButton pasteToolStripButton;
+        private ToolStripButton saveQuickAccessButton;
+        private ToolStripButton saveAsQuickAccessButton;
+        private ToolStripButton cutQuickAccessButton;
+        private ToolStripButton copyQuickAccessButton;
+        private ToolStripButton pasteQuickAccessButton;
         private ToolStripSeparator toolStripSeparator7;
-        private ToolStripButton quoteToolStripButton;
-        private ToolStripButton codeToolStripButton;
+        private ToolStripButton quoteQuickAccessButton;
+        private ToolStripButton codeQuickAccessButton;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripButton linkToolStripButton;
         private ToolStripStatusLabel toolStripStatusLabel;
-        private ToolStripDropDownButton headerToolStripDropDown;
+        private ToolStripDropDownButton headingToolStripDropDown;
         private ToolStripButton toolStripButton1;
         private ToolStripButton toolStripButton2;
-        private ToolStripButton newToolStripButton;
-        private ToolStripButton openToolStripButton;
+        private ToolStripButton newQuickAccessButton;
+        private ToolStripButton openQuickAccessButton;
+        private ToolStripMenuItem formatToolStripMenuItem;
+        private ToolStripMenuItem boldToolStripMenuItem;
+        private ToolStripMenuItem italicToolStripMenuItem;
+        private ToolStripMenuItem headingToolStripMenuItem;
+        private ToolStripMenuItem bulletToolStripMenuItem;
+        private ToolStripSeparator toolStripSeparator10;
+        private ToolStripMenuItem insertToolStripMenuItem;
+        private ToolStripMenuItem linkToolStripMenuItem;
+        private ToolStripMenuItem imageToolStripMenuItem;
+        private ToolStripMenuItem blockquoteToolStripMenuItem;
+        private ToolStripMenuItem inlineCodeToolStripMenuItem;
+        private ToolStripMenuItem numberedListToolStripMenuItem;
+        private ToolStripMenuItem h1ToolStripMenuItem;
+        private ToolStripMenuItem h2ToolStripMenuItem;
+        private ToolStripMenuItem h3ToolStripMenuItem;
+        private ToolStripMenuItem h4ToolStripMenuItem;
+        private ToolStripMenuItem h5ToolStripMenuItem;
+        private ToolStripMenuItem h6ToolStripMenuItem;
+        private ToolStripMenuItem h1QuickAccessItem;
+        private ToolStripMenuItem h2QuickAccessItem;
+        private ToolStripMenuItem h3QuickAccessItem;
+        private ToolStripMenuItem h4QuickAccessItem;
+        private ToolStripMenuItem h5QuickAccessItem;
+        private ToolStripMenuItem h6QuickAccessItem;
     }
 }
