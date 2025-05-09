@@ -41,6 +41,17 @@ public class TextBoxAdapter : ITextEditor
         set => _textBox.Lines = value;
     }
     
+    public string CurrentLine
+    {
+        get
+        {
+            var lineIndex = _textBox.GetLineFromCharIndex(_textBox.SelectionStart);
+            return lineIndex >= 0 && lineIndex < _textBox.Lines.Length
+                ? _textBox.Lines[lineIndex]
+                : string.Empty;
+        }
+    }
+    
     public void Select(int start, int length)
     {
         _textBox.Select(start, length);

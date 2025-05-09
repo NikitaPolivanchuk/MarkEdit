@@ -56,5 +56,6 @@ public abstract class PrefixCommand : FormatCommand
 
     protected abstract string TogglePrefix(string line);
 
-    public override bool CanExecute() => true;
+    public override bool CanExecute()
+        => Editor.CurrentLine.Length != 0;
 }

@@ -8,6 +8,8 @@ public interface ITextEditor
     int SelectionLength { get; set; }
     string[] Lines { get; set; }
     
+    string CurrentLine { get; }
+    
     void Select(int start, int length);
     int GetLineFromCharIndex(int index);
     int GetFirstCharIndexFromLine(int index);
