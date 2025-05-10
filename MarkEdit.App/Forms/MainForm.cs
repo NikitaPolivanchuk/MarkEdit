@@ -1,3 +1,4 @@
+using Markdig;
 using MarkEdit.App.Adapters;
 using MarkEdit.App.Events;
 using MarkEdit.App.Services;
@@ -10,6 +11,7 @@ using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
+using Microsoft.Web.WebView2.Core;
 
 namespace MarkEdit.App.Forms;
 
@@ -26,6 +28,7 @@ public partial class MainForm : Form
     public MainForm()
     {
         InitializeComponent();
+        InitializeWebView();
         InitializeServices();
         RegisterTextEditorEvents();
         WireUpQuickAccessCommands();
@@ -34,7 +37,7 @@ public partial class MainForm : Form
     
     private void InitializeServices()
     {
-        _editor = new TextBoxAdapter(textBox1);
+        _editor = new TextBoxAdapter(textBox);
         _commandManager = new CommandManager(200);
         _clipboard = new ClipboardAdapter();
         _document = new Document();
@@ -43,11 +46,24 @@ public partial class MainForm : Form
         _listContinuation = new ListContinuationHelper();
     }
     
+    private void InitializeWebView()
+    {
+        webView.CoreWebView2InitializationCompleted += (_, e) =>
+        {
+            if (e.IsSuccess)
+            {
+                webView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+            }
+        };
+
+        _ = webView.EnsureCoreWebView2Async(null);
+    }
+    
     private void RegisterTextEditorEvents()
     {
-        textBox1.CharacterInserted += OnCharacterInsert;
-        textBox1.TextDeleted += OnTextDelete;
-        textBox1.TextChanged += OnTextChanged;
+        textBox.CharacterInserted += OnCharacterInsert;
+        textBox.TextDeleted += OnTextDelete;
+        textBox.TextChanged += OnTextChanged;
     }
 
     private void WireUpQuickAccessCommands()
@@ -123,14 +139,16 @@ public partial class MainForm : Form
 
     private void OnTextChanged(object? sender, EventArgs e)
     {
-        var index = textBox1.SelectionStart;
-        var line = textBox1.GetLineFromCharIndex(index);
-        var column = index - textBox1.GetFirstCharIndexOfCurrentLine();
+        var index = textBox.SelectionStart;
+        var line = textBox.GetLineFromCharIndex(index);
+        var column = index - textBox.GetFirstCharIndexOfCurrentLine();
         
         toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
 
         _document.Content = _editor.Text;
         _document.IsDirty = true;
+
+        UpdatePreview(_editor.Text);
     }
 
     private void OnCharacterInsert(object? sender, CharChangeEventArgs e)
@@ -159,6 +177,20 @@ public partial class MainForm : Form
         if (!_commandManager.InternalChange)
         {
             _commandManager.Save(new DeleteCommand(_editor, e.Position, e.DeletedText));
+        }
+    }
+    
+    private void UpdatePreview(string content)
+    {
+        var html = Markdown.ToHtml(content);
+        webView.CoreWebView2.NavigateToString($"<html><body>{html}</body></html>");
+    }
+    
+    private void CoreWebView2_NavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
+    {
+        if (e.IsUserInitiated)
+        {
+            e.Cancel = true;
         }
     }
 }
