@@ -10,7 +10,8 @@ public abstract class ListCommandBase : IRevertibleCommand
     private readonly int _selectionStart;
     private readonly int _selectionLength;
     private readonly string _originalText;
-    private string _newText = string.Empty;
+    
+    private string _newText;
 
     protected ListCommandBase(ITextEditor editor)
     {
@@ -18,16 +19,47 @@ public abstract class ListCommandBase : IRevertibleCommand
         _selectionStart = editor.SelectionStart;
         _selectionLength = editor.SelectionLength;
         _originalText = editor.SelectedText;
+        _newText = string.Empty;
     }
     
     protected abstract string GetListPrefix(int index);
-
+    protected abstract Regex ListItemRegex { get; }
+    
     public void Execute()
     {
         _editor.Select(_selectionStart, _selectionLength);
         var selectedText = _editor.SelectedText;
-
+        
         var lines = selectedText.Split(Environment.NewLine);
+        var isAlreadyList = lines.Any(line => ListItemRegex.IsMatch(line));
+        
+        _newText = isAlreadyList 
+            ? RemoveListFormatting(lines)
+            : ApplyListFormatting(lines);
+
+        _editor.SelectedText = _newText;
+        _editor.Select(_selectionStart, _newText.Length);
+    }
+    
+    private string RemoveListFormatting(string[] lines)
+    {
+        for (var i = 0; i < lines.Length; i++)
+        {
+            lines[i] = RemovePrefix(lines[i]);
+        }
+        return string.Join(Environment.NewLine, lines);
+    }
+    
+    private string RemovePrefix(string line)
+    {
+        var match = ListItemRegex.Match(line);
+        return match.Success 
+            ? line.Substring(match.Length).TrimStart()
+            : line;
+    }
+    
+    private string ApplyListFormatting(string[] lines)
+    {
         for (var i = 0; i < lines.Length; i++)
         {
             var line = lines[i];
@@ -35,10 +67,7 @@ public abstract class ListCommandBase : IRevertibleCommand
             var indent = indentMatch.Value;
             lines[i] = $"{indent}{GetListPrefix(i)} {line.TrimStart()}";
         }
-        
-        _newText = string.Join(Environment.NewLine, lines);
-        _editor.SelectedText = _newText;
-        _editor.Select(_selectionStart, _newText.Length);
+        return string.Join(Environment.NewLine, lines);
     }
 
     public void Undo()

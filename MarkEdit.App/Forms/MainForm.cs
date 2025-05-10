@@ -75,27 +75,29 @@ public partial class MainForm : Form
         BindClick(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
         BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
+        //Link command
         BindClick(linkQuickAccessButton, () => new LinkCommand(_editor, _linkProvider));
+        //List commands
         BindClick(bulletListQuickAccessButton, () => new BulletListCommand(_editor));
         BindClick(numberedListQuickAccessButton, () => new NumberedListCommand(_editor));
     }
 
     private void WireUpMenuStripCommands()
     {
-        // File commands
+        //File commands
         BindClick(newToolStripMenuItem, () => new NewCommand(_document, _editor));
         BindClick(openToolStripMenuItem, () => new OpenCommand(_document, _fileService, _editor));
         BindClick(saveToolStripMenuItem, () => new SaveCommand(_document, _fileService, _editor));
         BindClick(saveAsToolStripMenuItem, () => new SaveAsCommand(_document, _fileService, _editor));
         BindClick(exitToolStripMenuItem, Application.Exit);
-        // Clipboard commands
+        //Clipboard commands
         BindClick(cutToolStripMenuItem, () => new CutCommand(_editor, _clipboard));
         BindClick(copyToolStripMenuItem, () => new CopyCommand(_editor, _clipboard));
         BindClick(pasteToolStripMenuItem, () => new PasteCommand(_editor, _clipboard));
-        // History commands
+        //History commands
         BindClick(undoToolStripMenuItem, _commandManager.Undo);
         BindClick(redoToolStripMenuItem, _commandManager.Redo);
-        // Formatting commands
+        //Formatting commands
         BindClick(boldToolStripMenuItem, () => new BoldCommand(_editor));
         BindClick(italicToolStripMenuItem, () => new ItalicCommand(_editor));
         BindClick(h1ToolStripMenuItem, () => new HeaderCommand(_editor, 1));
@@ -104,6 +106,9 @@ public partial class MainForm : Form
         BindClick(h4ToolStripMenuItem, () => new HeaderCommand(_editor, 4));
         BindClick(h5ToolStripMenuItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6ToolStripMenuItem, () => new HeaderCommand(_editor, 6));
+        //List commands
+        BindClick(bulletToolStripMenuItem, () => new BulletListCommand(_editor));
+        BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
     }
     
     private void BindClick(ToolStripItem item, Func<ICommand> commandFactory)
