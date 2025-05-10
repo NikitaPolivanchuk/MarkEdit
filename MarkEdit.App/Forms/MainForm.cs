@@ -7,6 +7,7 @@ using MarkEdit.Commands.Clipboard;
 using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
+using MarkEdit.Commands.List;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 
@@ -20,6 +21,7 @@ public partial class MainForm : Form
     private Document _document;
     private IFileService _fileService;
     private ILinkProvider _linkProvider;
+    private ListContinuationHelper _listContinuation;
 
     public MainForm()
     {
@@ -38,6 +40,7 @@ public partial class MainForm : Form
         _document = new Document();
         _fileService = new FileService();
         _linkProvider = new LinkPromptProvider();
+        _listContinuation = new ListContinuationHelper();
     }
     
     private void RegisterTextEditorEvents()
@@ -72,25 +75,29 @@ public partial class MainForm : Form
         BindClick(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
         BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
-        BindClick(linkToolStripButton, () => new LinkCommand(_editor, _linkProvider));
+        //Link command
+        BindClick(linkQuickAccessButton, () => new LinkCommand(_editor, _linkProvider));
+        //List commands
+        BindClick(bulletListQuickAccessButton, () => new BulletListCommand(_editor));
+        BindClick(numberedListQuickAccessButton, () => new NumberedListCommand(_editor));
     }
 
     private void WireUpMenuStripCommands()
     {
-        // File commands
+        //File commands
         BindClick(newToolStripMenuItem, () => new NewCommand(_document, _editor));
         BindClick(openToolStripMenuItem, () => new OpenCommand(_document, _fileService, _editor));
         BindClick(saveToolStripMenuItem, () => new SaveCommand(_document, _fileService, _editor));
         BindClick(saveAsToolStripMenuItem, () => new SaveAsCommand(_document, _fileService, _editor));
         BindClick(exitToolStripMenuItem, Application.Exit);
-        // Clipboard commands
+        //Clipboard commands
         BindClick(cutToolStripMenuItem, () => new CutCommand(_editor, _clipboard));
         BindClick(copyToolStripMenuItem, () => new CopyCommand(_editor, _clipboard));
         BindClick(pasteToolStripMenuItem, () => new PasteCommand(_editor, _clipboard));
-        // History commands
+        //History commands
         BindClick(undoToolStripMenuItem, _commandManager.Undo);
         BindClick(redoToolStripMenuItem, _commandManager.Redo);
-        // Formatting commands
+        //Formatting commands
         BindClick(boldToolStripMenuItem, () => new BoldCommand(_editor));
         BindClick(italicToolStripMenuItem, () => new ItalicCommand(_editor));
         BindClick(h1ToolStripMenuItem, () => new HeaderCommand(_editor, 1));
@@ -99,6 +106,9 @@ public partial class MainForm : Form
         BindClick(h4ToolStripMenuItem, () => new HeaderCommand(_editor, 4));
         BindClick(h5ToolStripMenuItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6ToolStripMenuItem, () => new HeaderCommand(_editor, 6));
+        //List commands
+        BindClick(bulletToolStripMenuItem, () => new BulletListCommand(_editor));
+        BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
     }
     
     private void BindClick(ToolStripItem item, Func<ICommand> commandFactory)
@@ -116,7 +126,7 @@ public partial class MainForm : Form
         var index = textBox1.SelectionStart;
         var line = textBox1.GetLineFromCharIndex(index);
         var column = index - textBox1.GetFirstCharIndexOfCurrentLine();
-
+        
         toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
 
         _document.Content = _editor.Text;
@@ -125,10 +135,23 @@ public partial class MainForm : Form
 
     private void OnCharacterInsert(object? sender, CharChangeEventArgs e)
     {
-        if (!_commandManager.InternalChange)
+        if (_commandManager.InternalChange)
         {
-            _commandManager.Save(new InsertCommand(_editor, e.Position, e.Character));
+            return;
         }
+        
+        if (e.Character == '\n' || e.Character == '\r')
+        {
+            var command = _listContinuation.GetContinuationCommand(_editor);
+            if (command != null)
+            {
+                _commandManager.Execute(command);
+                e.Handled = true;
+                return;
+            }
+        }
+        
+        _commandManager.Save(new InsertCommand(_editor, e.Position, e.Character));
     }
 
     private void OnCharacterDelete(object? sender, CharChangeEventArgs e)

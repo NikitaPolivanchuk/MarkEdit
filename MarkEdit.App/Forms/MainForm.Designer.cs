@@ -108,10 +108,10 @@ namespace MarkEdit.App.Forms
             italicQuickAccessButton = new ToolStripButton();
             quoteQuickAccessButton = new ToolStripButton();
             codeQuickAccessButton = new ToolStripButton();
-            linkToolStripButton = new ToolStripButton();
+            linkQuickAccessButton = new ToolStripButton();
             toolStripSeparator9 = new ToolStripSeparator();
-            toolStripButton1 = new ToolStripButton();
-            toolStripButton2 = new ToolStripButton();
+            bulletListQuickAccessButton = new ToolStripButton();
+            numberedListQuickAccessButton = new ToolStripButton();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -509,7 +509,7 @@ namespace MarkEdit.App.Forms
             // quickAccess
             // 
             quickAccess.ImageScalingSize = new Size(20, 20);
-            quickAccess.Items.AddRange(new ToolStripItem[] { newQuickAccessButton, openQuickAccessButton, saveQuickAccessButton, saveAsQuickAccessButton, toolStripSeparator8, cutQuickAccessButton, copyQuickAccessButton, pasteQuickAccessButton, toolStripSeparator7, undoQuickAccessButton, redoQuickAccessButton, toolStripSeparator6, headingToolStripDropDown, boldQuickAccessButton, italicQuickAccessButton, quoteQuickAccessButton, codeQuickAccessButton, linkToolStripButton, toolStripSeparator9, toolStripButton1, toolStripButton2 });
+            quickAccess.Items.AddRange(new ToolStripItem[] { newQuickAccessButton, openQuickAccessButton, saveQuickAccessButton, saveAsQuickAccessButton, toolStripSeparator8, cutQuickAccessButton, copyQuickAccessButton, pasteQuickAccessButton, toolStripSeparator7, undoQuickAccessButton, redoQuickAccessButton, toolStripSeparator6, headingToolStripDropDown, boldQuickAccessButton, italicQuickAccessButton, quoteQuickAccessButton, codeQuickAccessButton, linkQuickAccessButton, toolStripSeparator9, bulletListQuickAccessButton, numberedListQuickAccessButton });
             quickAccess.Location = new Point(0, 24);
             quickAccess.Name = "quickAccess";
             quickAccess.Size = new Size(700, 27);
@@ -700,37 +700,37 @@ namespace MarkEdit.App.Forms
             codeQuickAccessButton.Size = new Size(24, 24);
             codeQuickAccessButton.Text = "Code";
             // 
-            // linkToolStripButton
+            // linkQuickAccessButton
             // 
-            linkToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            linkToolStripButton.Image = Properties.Resources.link;
-            linkToolStripButton.ImageTransparentColor = Color.Magenta;
-            linkToolStripButton.Name = "linkToolStripButton";
-            linkToolStripButton.Size = new Size(24, 24);
-            linkToolStripButton.Text = "Link";
+            linkQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            linkQuickAccessButton.Image = Properties.Resources.link;
+            linkQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            linkQuickAccessButton.Name = "linkQuickAccessButton";
+            linkQuickAccessButton.Size = new Size(24, 24);
+            linkQuickAccessButton.Text = "Link";
             // 
             // toolStripSeparator9
             // 
             toolStripSeparator9.Name = "toolStripSeparator9";
             toolStripSeparator9.Size = new Size(6, 27);
             // 
-            // toolStripButton1
+            // bulletListQuickAccessButton
             // 
-            toolStripButton1.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton1.Image = Properties.Resources.list_ul;
-            toolStripButton1.ImageTransparentColor = Color.Magenta;
-            toolStripButton1.Name = "toolStripButton1";
-            toolStripButton1.Size = new Size(24, 24);
-            toolStripButton1.Text = "toolStripButton1";
+            bulletListQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            bulletListQuickAccessButton.Image = Properties.Resources.list_ul;
+            bulletListQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            bulletListQuickAccessButton.Name = "bulletListQuickAccessButton";
+            bulletListQuickAccessButton.Size = new Size(24, 24);
+            bulletListQuickAccessButton.Text = "toolStripButton1";
             // 
-            // toolStripButton2
+            // numberedListQuickAccessButton
             // 
-            toolStripButton2.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            toolStripButton2.Image = Properties.Resources.list_ol;
-            toolStripButton2.ImageTransparentColor = Color.Magenta;
-            toolStripButton2.Name = "toolStripButton2";
-            toolStripButton2.Size = new Size(24, 24);
-            toolStripButton2.Text = "toolStripButton2";
+            numberedListQuickAccessButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            numberedListQuickAccessButton.Image = Properties.Resources.list_ol;
+            numberedListQuickAccessButton.ImageTransparentColor = Color.Magenta;
+            numberedListQuickAccessButton.Name = "numberedListQuickAccessButton";
+            numberedListQuickAccessButton.Size = new Size(24, 24);
+            numberedListQuickAccessButton.Text = "toolStripButton2";
             // 
             // MainForm
             // 
@@ -814,11 +814,11 @@ namespace MarkEdit.App.Forms
         private ToolStripButton codeQuickAccessButton;
         private ToolStripSeparator toolStripSeparator8;
         private ToolStripSeparator toolStripSeparator9;
-        private ToolStripButton linkToolStripButton;
+        private ToolStripButton linkQuickAccessButton;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ToolStripDropDownButton headingToolStripDropDown;
-        private ToolStripButton toolStripButton1;
-        private ToolStripButton toolStripButton2;
+        private ToolStripButton bulletListQuickAccessButton;
+        private ToolStripButton numberedListQuickAccessButton;
         private ToolStripButton newQuickAccessButton;
         private ToolStripButton openQuickAccessButton;
         private ToolStripMenuItem formatToolStripMenuItem;
