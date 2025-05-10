@@ -7,24 +7,24 @@ public class DeleteCommand : IRevertibleCommand
 {
     private readonly ITextEditor _editor;
     private readonly int _position;
-    private readonly char _deletedChar;
+    private readonly string _deletedText;
 
-    public DeleteCommand(ITextEditor editor, int position, char deletedChar)
+    public DeleteCommand(ITextEditor editor, int position, string deletedText)
     {
         _editor = editor;
         _position = position;
-        _deletedChar = deletedChar;
+        _deletedText = deletedText;
     }
 
     public void Execute()
     {
-        _editor.Text = _editor.Text.Remove(_position, 1);
+        _editor.Text = _editor.Text.Remove(_position, _deletedText.Length);
     }
 
     public bool CanExecute() => true;
 
     public void Undo()
     {
-        _editor.Text = _editor.Text.Insert(_position, _deletedChar.ToString());
+        _editor.Text = _editor.Text.Insert(_position, _deletedText);
     }
 }
