@@ -46,7 +46,7 @@ public partial class MainForm : Form
     private void RegisterTextEditorEvents()
     {
         textBox1.CharacterInserted += OnCharacterInsert;
-        textBox1.CharacterDeleted += OnCharacterDelete;
+        textBox1.TextDeleted += OnTextDelete;
         textBox1.TextChanged += OnTextChanged;
     }
 
@@ -154,11 +154,11 @@ public partial class MainForm : Form
         _commandManager.Save(new InsertCommand(_editor, e.Position, e.Character));
     }
 
-    private void OnCharacterDelete(object? sender, CharChangeEventArgs e)
+    private void OnTextDelete(object? sender, TextDeletedEventArgs e)
     {
         if (!_commandManager.InternalChange)
         {
-            _commandManager.Save(new DeleteCommand(_editor, e.Position, e.Character));
+            _commandManager.Save(new DeleteCommand(_editor, e.Position, e.DeletedText));
         }
     }
 }
