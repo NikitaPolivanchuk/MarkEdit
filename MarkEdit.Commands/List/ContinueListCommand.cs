@@ -1,7 +1,7 @@
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 
-namespace MarkEdit.Commands;
+namespace MarkEdit.Commands.List;
 
 public class ContinueListCommand : IRevertibleCommand
 {

@@ -7,6 +7,7 @@ using MarkEdit.Commands.Clipboard;
 using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
+using MarkEdit.Commands.List;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 
@@ -74,7 +75,9 @@ public partial class MainForm : Form
         BindClick(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
         BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
-        BindClick(linkToolStripButton, () => new LinkCommand(_editor, _linkProvider));
+        BindClick(linkQuickAccessButton, () => new LinkCommand(_editor, _linkProvider));
+        BindClick(bulletListQuickAccessButton, () => new BulletListCommand(_editor));
+        BindClick(numberedListQuickAccessButton, () => new NumberedListCommand(_editor));
     }
 
     private void WireUpMenuStripCommands()
