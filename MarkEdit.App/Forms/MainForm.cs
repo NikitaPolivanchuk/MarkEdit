@@ -1,4 +1,5 @@
 using MarkEdit.App.Events;
+using MarkEdit.App.Services;
 using MarkEdit.Commands;
 using MarkEdit.Commands.Basic;
 using MarkEdit.Commands.Clipboard;
