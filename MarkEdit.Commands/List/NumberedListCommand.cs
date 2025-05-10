@@ -14,5 +14,5 @@ public partial class NumberedListCommand : ListCommandBase
     
     protected override string GetListPrefix(int index) => $"{index + 1}.";
     
-    protected override Regex ListItemRegex => ItemRegex();
+    protected override Regex Pattern => ItemRegex();
 }

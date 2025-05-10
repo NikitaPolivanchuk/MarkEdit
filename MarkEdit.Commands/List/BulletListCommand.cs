@@ -14,5 +14,5 @@ public partial class BulletListCommand : ListCommandBase
     
     protected override string GetListPrefix(int index) => "-";
     
-    protected override Regex ListItemRegex => ItemRegex();
+    protected override Regex Pattern => ItemRegex();
 }

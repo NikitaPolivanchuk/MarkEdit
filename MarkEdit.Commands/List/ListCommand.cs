@@ -23,7 +23,7 @@ public abstract class ListCommandBase : IRevertibleCommand
     }
     
     protected abstract string GetListPrefix(int index);
-    protected abstract Regex ListItemRegex { get; }
+    protected abstract Regex Pattern { get; }
     
     public void Execute()
     {
@@ -31,7 +31,7 @@ public abstract class ListCommandBase : IRevertibleCommand
         var selectedText = _editor.SelectedText;
         
         var lines = selectedText.Split(Environment.NewLine);
-        var isAlreadyList = lines.Any(line => ListItemRegex.IsMatch(line));
+        var isAlreadyList = lines.Any(line => Pattern.IsMatch(line));
         
         _newText = isAlreadyList 
             ? RemoveListFormatting(lines)
@@ -52,7 +52,7 @@ public abstract class ListCommandBase : IRevertibleCommand
     
     private string RemovePrefix(string line)
     {
-        var match = ListItemRegex.Match(line);
+        var match = Pattern.Match(line);
         return match.Success 
             ? line.Substring(match.Length).TrimStart()
             : line;

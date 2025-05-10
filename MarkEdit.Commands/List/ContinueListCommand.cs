@@ -18,13 +18,22 @@ public class ContinueListCommand : IRevertibleCommand
 
     public void Execute()
     {
-        _editor.Text = _editor.Text.Insert(_insertPosition, _insertedText);
-        _editor.SelectionStart = _insertPosition + _insertedText.Length;
+        if (!string.IsNullOrEmpty(_insertedText.Trim()))
+        {
+            _editor.Text = _editor.Text.Insert(_insertPosition, _insertedText);
+            _editor.SelectionStart = _insertPosition + _insertedText.Length;
+            return;
+        }
+        var lineIndex = _editor.GetLineFromCharIndex(_insertPosition);
+        var start = _editor.GetFirstCharIndexFromLine(lineIndex);
+        _editor.Select(start, _insertPosition - start);
+        _editor.SelectedText = string.Empty;
     }
 
     public void Undo()
     {
-        _editor.Text = _editor.Text.Remove(_insertPosition, _insertedText.Length);
+        _editor.Select(_insertPosition, _insertedText.Length);
+        _editor.SelectedText = string.Empty;
         _editor.SelectionStart = _insertPosition;
     }
     

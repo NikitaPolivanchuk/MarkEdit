@@ -126,7 +126,7 @@ public partial class MainForm : Form
         var index = textBox1.SelectionStart;
         var line = textBox1.GetLineFromCharIndex(index);
         var column = index - textBox1.GetFirstCharIndexOfCurrentLine();
-
+        
         toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
 
         _document.Content = _editor.Text;

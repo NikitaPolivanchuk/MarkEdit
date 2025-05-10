@@ -9,8 +9,8 @@ public class ListContinuationHelper
 {
     private readonly List<IListContinuationStrategy> _strategies = new()
     {
-        new BulletListStrategy(),
-        new NumberedListStrategy(),
+        new BulletListContinuationStrategy(),
+        new NumberedListContinuationStrategy(),
     };
 
     public IRevertibleCommand? GetContinuationCommand(ITextEditor editor)
