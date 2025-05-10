@@ -4,6 +4,7 @@ namespace MarkEdit.Commands.Formatting.Wrapping;
 
 public class CodeCommand : FormatCommand
 {
+    private int _selectionStart;
     private int _selectionLength;
     
     public CodeCommand(ITextEditor editor)
@@ -14,15 +15,21 @@ public class CodeCommand : FormatCommand
     {
         Editor.Select(OriginalSelectionStart, OriginalSelectionLength);
 
-        ApplyFormatting(IsMultiline()
-            ? ToggleBlock(Editor.SelectedText)
-            : ToggleInline(Editor.SelectedText)
-        );
+        if (IsMultiline())
+        {
+            ExpandToFullLines();
+            ApplyFormatting(ToggleBlock(Editor.SelectedText));
+        }
+        else
+        {
+            ApplyFormatting(ToggleInline(Editor.SelectedText));
+        }
     }
 
     public override void Undo()
+    
     {
-        Editor.Select(OriginalSelectionStart, OriginalSelectionLength);
+        Editor.Select(_selectionStart, _selectionLength);
         Editor.SelectedText = OriginalText;
     }
 
@@ -58,10 +65,25 @@ public class CodeCommand : FormatCommand
         return $"```{Environment.NewLine}{text}{Environment.NewLine}```";
     }
     
+    private void ExpandToFullLines()
+    {
+        var startLine = Editor.GetLineFromCharIndex(OriginalSelectionStart);
+        var endCharIndex = OriginalSelectionStart + OriginalSelectionLength;
+        var endLine = Editor.GetLineFromCharIndex(endCharIndex);
+
+        var fullStart = Editor.GetFirstCharIndexFromLine(startLine);
+        var fullEnd = Editor.GetFirstCharIndexFromLine(endLine) + Editor.Lines[endLine].Length;
+
+        var length = fullEnd - fullStart;
+        
+        _selectionStart = fullStart;
+        Editor.Select(fullStart, length);
+    }
+    
     private void ApplyFormatting(string text)
     {
         _selectionLength = text.Length;
         Editor.SelectedText = text;
-        Editor.Select(OriginalSelectionStart, _selectionLength);
+        Editor.Select(_selectionStart, _selectionLength);
     }
 }
