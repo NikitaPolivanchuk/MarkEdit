@@ -1,8 +1,8 @@
 using MarkEdit.App.Events;
+using MarkEdit.Commands;
 using MarkEdit.Commands.Basic;
 using MarkEdit.Commands.Clipboard;
 using MarkEdit.Commands.File;
-using MarkEdit.Commands.Formatting;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Core;
@@ -17,6 +17,7 @@ public partial class MainForm : Form
     private IClipboard _clipboard;
     private Document _document;
     private IFileService _fileService;
+    private ILinkProvider _linkProvider;
 
     public MainForm()
     {
@@ -34,6 +35,7 @@ public partial class MainForm : Form
         _clipboard = new ClipboardAdapter();
         _document = new Document();
         _fileService = new FileService();
+        _linkProvider = new LinkPromptProvider();
     }
     
     private void RegisterTextEditorEvents()
@@ -68,6 +70,7 @@ public partial class MainForm : Form
         BindClick(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
         BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
+        BindClick(linkToolStripButton, () => new LinkCommand(_editor, _linkProvider));
     }
 
     private void WireUpMenuStripCommands()
