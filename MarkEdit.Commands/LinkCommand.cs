@@ -7,33 +7,28 @@ namespace MarkEdit.Commands;
 public class LinkCommand : IRevertibleCommand
 {
     private readonly ITextEditor _editor;
-    private readonly ILinkProvider _linkProvider;
     private readonly string _originalText;
     private readonly int _selectionStart;
     private readonly int _selectionLength;
+    private readonly string? _url;
     
-    private string? _url;
-    private bool _requested;
     private int _newSelectionLength;
 
     public LinkCommand(ITextEditor editor, ILinkProvider linkProvider)
     {
         _editor = editor;
-        _linkProvider = linkProvider;
         _originalText = _editor.SelectedText;
         _selectionStart = _editor.SelectionStart;
         _selectionLength = _editor.SelectionLength;
+        if (_selectionLength > 0)
+        {
+            _url = linkProvider.GetUrlLink();
+        }
     }
 
     public void Execute()
     {
         _editor.Select(_selectionStart, _selectionLength);
-
-        if (!_requested)
-        {
-            _url = _linkProvider.GetUrlLink();
-            _requested = true;
-        }
 
         var link = $"[{_editor.SelectedText}]({WebUtility.UrlEncode(_url)})";
         _newSelectionLength = link.Length;
@@ -48,5 +43,5 @@ public class LinkCommand : IRevertibleCommand
     }
     
     public bool CanExecute()
-        => _selectionLength > 0;
+        => !string.IsNullOrEmpty(_url);
 }
