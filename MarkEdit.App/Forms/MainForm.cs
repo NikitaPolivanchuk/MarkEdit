@@ -20,6 +20,7 @@ public partial class MainForm : Form
     private Document _document;
     private IFileService _fileService;
     private ILinkProvider _linkProvider;
+    private ListContinuationHelper _listContinuation;
 
     public MainForm()
     {
@@ -38,6 +39,7 @@ public partial class MainForm : Form
         _document = new Document();
         _fileService = new FileService();
         _linkProvider = new LinkPromptProvider();
+        _listContinuation = new ListContinuationHelper();
     }
     
     private void RegisterTextEditorEvents()
@@ -125,10 +127,23 @@ public partial class MainForm : Form
 
     private void OnCharacterInsert(object? sender, CharChangeEventArgs e)
     {
-        if (!_commandManager.InternalChange)
+        if (_commandManager.InternalChange)
         {
-            _commandManager.Save(new InsertCommand(_editor, e.Position, e.Character));
+            return;
         }
+        
+        if (e.Character == '\n' || e.Character == '\r')
+        {
+            var command = _listContinuation.GetContinuationCommand(_editor);
+            if (command != null)
+            {
+                _commandManager.Execute(command);
+                e.Handled = true;
+                return;
+            }
+        }
+        
+        _commandManager.Save(new InsertCommand(_editor, e.Position, e.Character));
     }
 
     private void OnCharacterDelete(object? sender, CharChangeEventArgs e)

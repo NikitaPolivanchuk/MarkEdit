@@ -17,10 +17,14 @@ public class ExtendedTextBox : TextBox
     
     private void OnKeyPress(object? sender, KeyPressEventArgs e)
     {
-        if (e.KeyChar != '\b')
+        if (e.KeyChar == '\b')
         {
-            CharacterInserted?.Invoke(this, new CharChangeEventArgs(SelectionStart, e.KeyChar));
+            return;
         }
+        
+        var ev = new CharChangeEventArgs(SelectionStart, e.KeyChar);
+        CharacterInserted?.Invoke(this, ev);
+        e.Handled = ev.Handled;
     }
     
     private void OnTextChanged(object? sender, EventArgs e)
