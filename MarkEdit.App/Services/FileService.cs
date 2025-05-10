@@ -1,6 +1,6 @@
 using MarkEdit.Core;
 
-namespace MarkEdit.App;
+namespace MarkEdit.App.Services;
 
 public class FileService : IFileService
 {

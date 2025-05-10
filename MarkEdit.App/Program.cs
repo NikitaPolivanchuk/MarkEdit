@@ -1,3 +1,5 @@
+using MarkEdit.App.Forms;
+
 namespace MarkEdit.App;
 
 internal static class Program

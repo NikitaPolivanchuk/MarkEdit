@@ -1,3 +1,4 @@
+using MarkEdit.App.Adapters;
 using MarkEdit.App.Events;
 using MarkEdit.App.Services;
 using MarkEdit.Commands;
@@ -9,7 +10,7 @@ using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 
-namespace MarkEdit.App;
+namespace MarkEdit.App.Forms;
 
 public partial class MainForm : Form
 {

@@ -1,6 +1,6 @@
 ﻿using MarkEdit.App.Controls;
 
-namespace MarkEdit.App
+namespace MarkEdit.App.Forms
 {
     partial class MainForm
     {
