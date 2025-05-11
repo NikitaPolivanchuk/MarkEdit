@@ -1,4 +1,4 @@
-namespace MarkEdit.App.Services;
+namespace MarkEdit.Core.List;
 
 public interface IListContinuationStrategy
 {

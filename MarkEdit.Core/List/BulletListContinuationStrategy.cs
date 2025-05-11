@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace MarkEdit.App.Services;
+namespace MarkEdit.Core.List;
 
 public partial class BulletListContinuationStrategy : ListContinuationStrategy
 {
