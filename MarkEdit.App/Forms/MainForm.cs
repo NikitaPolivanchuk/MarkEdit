@@ -2,7 +2,8 @@ using Markdig;
 using MarkEdit.App.Adapters;
 using MarkEdit.App.Events;
 using MarkEdit.App.Services;
-using MarkEdit.App.ViewStates;
+using MarkEdit.App.States.App;
+using MarkEdit.App.States.View;
 using MarkEdit.Commands;
 using MarkEdit.Commands.Basic;
 using MarkEdit.Commands.Clipboard;
@@ -26,6 +27,8 @@ public partial class MainForm : Form
     private ILinkProvider _linkProvider;
     private ListContinuationHelper _listContinuation;
     private IViewState _currentViewState;
+    private IAppStateService _appStateService;
+    private AppState _appState;
 
     public SplitContainer SplitContainer => splitContainer;
 
@@ -50,6 +53,8 @@ public partial class MainForm : Form
         _fileService = new FileService();
         _linkProvider = new LinkPromptProvider();
         _listContinuation = new ListContinuationHelper();
+        _appStateService = new JsonAppStateService();
+        _appState = _appStateService.Load();
     }
     
     private void InitializeWebView()
@@ -76,9 +81,9 @@ public partial class MainForm : Form
     {
         //File commands
         BindClick(newToolStripMenuItem, () => new NewCommand(_document, _editor));
-        BindClick(openToolStripMenuItem, () => new OpenCommand(_document, _fileService, _editor));
-        BindClick(saveToolStripMenuItem, () => new SaveCommand(_document, _fileService, _editor));
-        BindClick(saveAsToolStripMenuItem, () => new SaveAsCommand(_document, _fileService, _editor));
+        BindClick(openToolStripMenuItem, () => WithFilePathUpdate(new OpenCommand(_document, _fileService, _editor)));
+        BindClick(saveToolStripMenuItem, () => WithFilePathUpdate(new SaveCommand(_document, _fileService, _editor)));
+        BindClick(saveAsToolStripMenuItem, () => WithFilePathUpdate(new SaveAsCommand(_document, _fileService, _editor)));
         BindClick(exitToolStripMenuItem, Application.Exit);
         //Clipboard commands
         BindClick(cutToolStripMenuItem, () => new CutCommand(_editor, _clipboard));
@@ -107,9 +112,9 @@ public partial class MainForm : Form
     {
         //File commands
         BindClick(newQuickAccessButton, () => new NewCommand(_document, _editor));
-        BindClick(openQuickAccessButton, () => new OpenCommand(_document, _fileService, _editor));
-        BindClick(saveQuickAccessButton, () => new SaveCommand(_document, _fileService, _editor));
-        BindClick(saveAsQuickAccessButton, () => new SaveAsCommand(_document, _fileService, _editor));
+        BindClick(openQuickAccessButton, () => WithFilePathUpdate(new OpenCommand(_document, _fileService, _editor)));
+        BindClick(saveQuickAccessButton, () => WithFilePathUpdate(new SaveCommand(_document, _fileService, _editor)));
+        BindClick(saveAsQuickAccessButton, () => WithFilePathUpdate(new SaveAsCommand(_document, _fileService, _editor)));
         //Clipboard commands
         BindClick(cutQuickAccessButton, () => new CutCommand(_editor, _clipboard));
         BindClick(copyQuickAccessButton, () => new CopyCommand(_editor, _clipboard));
@@ -210,7 +215,7 @@ public partial class MainForm : Form
     private void UpdatePreview(string content)
     {
         var html = Markdown.ToHtml(content);
-        webView.CoreWebView2.NavigateToString($"<html><body>{html}</body></html>");
+        webView.CoreWebView2?.NavigateToString($"<html><body>{html}</body></html>");
     }
     
     private void CoreWebView2_NavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
@@ -223,8 +228,6 @@ public partial class MainForm : Form
     
     private void WireUpViewMenuCommands()
     {
-        SetViewState(new SplitViewState());
-
         BindClick(togglePreviewToolStripMenuItem, () => SetViewState(new PreviewOnlyState()));
         BindClick(toggleSourceViewToolStripMenuItem, () => SetViewState(new SourceOnlyState()));
         BindClick(splitViewToolStripMenuItem, () => SetViewState(new SplitViewState()));
@@ -234,6 +237,13 @@ public partial class MainForm : Form
     {
         _currentViewState = state;
         state.Apply(this);
+        
+        _appState.ViewState = state switch
+        {
+            PreviewOnlyState => ViewStateType.Preview,
+            SourceOnlyState => ViewStateType.Source,
+            _ => ViewStateType.Split
+        };
     }
     
     public void SetViewMenuChecks(bool preview, bool source, bool split)
@@ -241,5 +251,35 @@ public partial class MainForm : Form
         togglePreviewToolStripMenuItem.Checked = preview;
         toggleSourceViewToolStripMenuItem.Checked = source;
         splitViewToolStripMenuItem.Checked = split;
+    }
+
+    private void MainForm_Load(object sender, EventArgs e)
+    {
+        if (!string.IsNullOrEmpty(_appState.LastOpenedFilePath) && File.Exists(_appState.LastOpenedFilePath))
+        {
+            _document.Load(_appState.LastOpenedFilePath);
+            _editor.Text = _document.Content;
+        }
+        
+        IViewState viewState = _appState.ViewState switch
+        {
+            ViewStateType.Preview => new PreviewOnlyState(),
+            ViewStateType.Source => new SourceOnlyState(),
+            _ => new SplitViewState(),
+        };
+        
+        SetViewState(viewState);
+    }
+    
+    protected override void OnFormClosing(FormClosingEventArgs e)
+    {
+        _appStateService.Save(_appState);
+        base.OnFormClosing(e);
+    }
+    
+    private void WithFilePathUpdate(ICommand command)
+    {
+        _commandManager.Execute(command);
+        _appState.LastOpenedFilePath = _document.FilePath;
     }
 }
