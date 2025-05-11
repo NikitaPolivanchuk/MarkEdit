@@ -2,6 +2,7 @@ using Markdig;
 using MarkEdit.App.Adapters;
 using MarkEdit.App.Events;
 using MarkEdit.App.Services;
+using MarkEdit.App.ViewStates;
 using MarkEdit.Commands;
 using MarkEdit.Commands.Basic;
 using MarkEdit.Commands.Clipboard;
@@ -24,6 +25,9 @@ public partial class MainForm : Form
     private IFileService _fileService;
     private ILinkProvider _linkProvider;
     private ListContinuationHelper _listContinuation;
+    private IViewState _currentViewState;
+
+    public SplitContainer SplitContainer => splitContainer;
 
     public MainForm()
     {
@@ -34,6 +38,7 @@ public partial class MainForm : Form
         WireUpMenuStripCommands();
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
+        WireUpViewMenuCommands();
     }
     
     private void InitializeServices()
@@ -214,5 +219,27 @@ public partial class MainForm : Form
         {
             e.Cancel = true;
         }
+    }
+    
+    private void WireUpViewMenuCommands()
+    {
+        SetViewState(new SplitViewState());
+
+        BindClick(togglePreviewToolStripMenuItem, () => SetViewState(new PreviewOnlyState()));
+        BindClick(toggleSourceViewToolStripMenuItem, () => SetViewState(new SourceOnlyState()));
+        BindClick(splitViewToolStripMenuItem, () => SetViewState(new SplitViewState()));
+    }
+    
+    private void SetViewState(IViewState state)
+    {
+        _currentViewState = state;
+        state.Apply(this);
+    }
+    
+    public void SetViewMenuChecks(bool preview, bool source, bool split)
+    {
+        togglePreviewToolStripMenuItem.Checked = preview;
+        toggleSourceViewToolStripMenuItem.Checked = source;
+        splitViewToolStripMenuItem.Checked = split;
     }
 }
