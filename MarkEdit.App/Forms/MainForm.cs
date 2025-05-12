@@ -31,7 +31,7 @@ public partial class MainForm : Form
     private IAppStateService _appStateService;
     private AppState _appState;
     private SearchContext _searchContext;
-    
+
     public SplitContainer SplitContainer => splitContainer;
 
     public MainForm()
@@ -212,7 +212,7 @@ public partial class MainForm : Form
         {
             return;
         }
-        
+
         if (e.Character == '\n' || e.Character == '\r')
         {
             var command = _listContinuation.GetContinuationCommand(_editor);
@@ -223,7 +223,7 @@ public partial class MainForm : Form
                 return;
             }
         }
-        
+
         _commandManager.Save(new InsertCommand(_editor, e.Position, e.Character));
     }
 
@@ -319,7 +319,7 @@ public partial class MainForm : Form
         {
             return;
         }
-        
+
         _searchContext.CurrentTerm = searchPanelTextBox.Text;
         _searchContext.LastMatchIndex = -1;
     }
