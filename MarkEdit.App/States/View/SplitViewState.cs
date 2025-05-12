@@ -1,6 +1,7 @@
 using MarkEdit.App.Forms;
+using MarkEdit.App.States.View;
 
-namespace MarkEdit.App.ViewStates;
+namespace MarkEdit.App.States.View;
 
 public class SplitViewState : IViewState
 {

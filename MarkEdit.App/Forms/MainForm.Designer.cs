@@ -54,6 +54,10 @@ namespace MarkEdit.App.Forms
             toolStripSeparator2 = new ToolStripSeparator();
             selectAllToolStripMenuItem = new ToolStripMenuItem();
             viewToolStripMenuItem = new ToolStripMenuItem();
+            togglePreviewToolStripMenuItem = new ToolStripMenuItem();
+            toggleSourceViewToolStripMenuItem = new ToolStripMenuItem();
+            splitViewToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator14 = new ToolStripSeparator();
             zoomToolStripMenuItem = new ToolStripMenuItem();
             zoomInToolStripMenuItem = new ToolStripMenuItem();
             zoomOutToolStripMenuItem = new ToolStripMenuItem();
@@ -126,10 +130,6 @@ namespace MarkEdit.App.Forms
             linkContextMenuItem = new ToolStripMenuItem();
             toolStripSeparator12 = new ToolStripSeparator();
             selectAllContextMenuItem = new ToolStripMenuItem();
-            togglePreviewToolStripMenuItem = new ToolStripMenuItem();
-            toggleSourceViewToolStripMenuItem = new ToolStripMenuItem();
-            splitViewToolStripMenuItem = new ToolStripMenuItem();
-            toolStripSeparator14 = new ToolStripSeparator();
             menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer).BeginInit();
             splitContainer.Panel1.SuspendLayout();
@@ -296,34 +296,57 @@ namespace MarkEdit.App.Forms
             viewToolStripMenuItem.Size = new Size(44, 20);
             viewToolStripMenuItem.Text = "&View";
             // 
+            // togglePreviewToolStripMenuItem
+            // 
+            togglePreviewToolStripMenuItem.Name = "togglePreviewToolStripMenuItem";
+            togglePreviewToolStripMenuItem.Size = new Size(177, 22);
+            togglePreviewToolStripMenuItem.Text = "Toggle Preview";
+            // 
+            // toggleSourceViewToolStripMenuItem
+            // 
+            toggleSourceViewToolStripMenuItem.Name = "toggleSourceViewToolStripMenuItem";
+            toggleSourceViewToolStripMenuItem.Size = new Size(177, 22);
+            toggleSourceViewToolStripMenuItem.Text = "Toggle Source View";
+            // 
+            // splitViewToolStripMenuItem
+            // 
+            splitViewToolStripMenuItem.Name = "splitViewToolStripMenuItem";
+            splitViewToolStripMenuItem.Size = new Size(177, 22);
+            splitViewToolStripMenuItem.Text = "Split View";
+            // 
+            // toolStripSeparator14
+            // 
+            toolStripSeparator14.Name = "toolStripSeparator14";
+            toolStripSeparator14.Size = new Size(174, 6);
+            // 
             // zoomToolStripMenuItem
             // 
             zoomToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { zoomInToolStripMenuItem, zoomOutToolStripMenuItem, toolStripSeparator5, restoreToolStripMenuItem });
             zoomToolStripMenuItem.Name = "zoomToolStripMenuItem";
-            zoomToolStripMenuItem.Size = new Size(180, 22);
+            zoomToolStripMenuItem.Size = new Size(177, 22);
             zoomToolStripMenuItem.Text = "Zoom";
             // 
             // zoomInToolStripMenuItem
             // 
             zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
-            zoomInToolStripMenuItem.Size = new Size(180, 22);
+            zoomInToolStripMenuItem.Size = new Size(127, 22);
             zoomInToolStripMenuItem.Text = "Zoom in";
             // 
             // zoomOutToolStripMenuItem
             // 
             zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
-            zoomOutToolStripMenuItem.Size = new Size(180, 22);
+            zoomOutToolStripMenuItem.Size = new Size(127, 22);
             zoomOutToolStripMenuItem.Text = "Zoom out";
             // 
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new Size(177, 6);
+            toolStripSeparator5.Size = new Size(124, 6);
             // 
             // restoreToolStripMenuItem
             // 
             restoreToolStripMenuItem.Name = "restoreToolStripMenuItem";
-            restoreToolStripMenuItem.Size = new Size(180, 22);
+            restoreToolStripMenuItem.Size = new Size(127, 22);
             restoreToolStripMenuItem.Text = "Restore";
             // 
             // formatToolStripMenuItem
@@ -827,29 +850,6 @@ namespace MarkEdit.App.Forms
             selectAllContextMenuItem.Size = new Size(122, 22);
             selectAllContextMenuItem.Text = "Select All";
             // 
-            // togglePreviewToolStripMenuItem
-            // 
-            togglePreviewToolStripMenuItem.Name = "togglePreviewToolStripMenuItem";
-            togglePreviewToolStripMenuItem.Size = new Size(180, 22);
-            togglePreviewToolStripMenuItem.Text = "Toggle Preview";
-            // 
-            // toggleSourceViewToolStripMenuItem
-            // 
-            toggleSourceViewToolStripMenuItem.Name = "toggleSourceViewToolStripMenuItem";
-            toggleSourceViewToolStripMenuItem.Size = new Size(180, 22);
-            toggleSourceViewToolStripMenuItem.Text = "Toggle Source View";
-            // 
-            // splitViewToolStripMenuItem
-            // 
-            splitViewToolStripMenuItem.Name = "splitViewToolStripMenuItem";
-            splitViewToolStripMenuItem.Size = new Size(180, 22);
-            splitViewToolStripMenuItem.Text = "Split View";
-            // 
-            // toolStripSeparator14
-            // 
-            toolStripSeparator14.Name = "toolStripSeparator14";
-            toolStripSeparator14.Size = new Size(177, 6);
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -863,6 +863,7 @@ namespace MarkEdit.App.Forms
             Margin = new Padding(3, 2, 3, 2);
             Name = "MainForm";
             Text = "MarkEdit";
+            Load += MainForm_Load;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
             splitContainer.Panel1.ResumeLayout(false);
