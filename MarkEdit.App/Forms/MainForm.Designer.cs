@@ -82,8 +82,15 @@ namespace MarkEdit.App.Forms
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             splitContainer = new SplitContainer();
+            panel1 = new Panel();
             textBox = new ExtendedTextBox();
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            searchPanel = new TableLayoutPanel();
+            nextSeachPanelButton = new Button();
+            previousSearchPanelButton = new Button();
+            closeSearchPanelButton = new Button();
+            searchPanelTextBox = new TextBox();
             statusStrip = new StatusStrip();
             toolStripStatusLabel = new ToolStripStatusLabel();
             quickAccess = new ToolStrip();
@@ -136,6 +143,8 @@ namespace MarkEdit.App.Forms
             splitContainer.Panel2.SuspendLayout();
             splitContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
+            searchPanel.SuspendLayout();
             statusStrip.SuspendLayout();
             quickAccess.SuspendLayout();
             contextMenuStrip.SuspendLayout();
@@ -263,6 +272,7 @@ namespace MarkEdit.App.Forms
             // findToolStripMenuItem
             // 
             findToolStripMenuItem.Name = "findToolStripMenuItem";
+            findToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F;
             findToolStripMenuItem.Size = new Size(144, 22);
             findToolStripMenuItem.Text = "Find";
             // 
@@ -473,20 +483,31 @@ namespace MarkEdit.App.Forms
             // splitContainer
             // 
             splitContainer.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            splitContainer.Location = new Point(0, 49);
+            splitContainer.Location = new Point(3, 36);
             splitContainer.Margin = new Padding(3, 2, 3, 2);
             splitContainer.Name = "splitContainer";
             // 
             // splitContainer.Panel1
             // 
+            splitContainer.Panel1.Controls.Add(panel1);
             splitContainer.Panel1.Controls.Add(textBox);
             // 
             // splitContainer.Panel2
             // 
             splitContainer.Panel2.Controls.Add(webView);
-            splitContainer.Size = new Size(700, 261);
-            splitContainer.SplitterDistance = 347;
+            splitContainer.Size = new Size(694, 229);
+            splitContainer.SplitterDistance = 344;
             splitContainer.TabIndex = 1;
+            // 
+            // panel1
+            // 
+            panel1.AutoSize = true;
+            panel1.BackColor = Color.Transparent;
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(344, 0);
+            panel1.TabIndex = 1;
             // 
             // textBox
             // 
@@ -497,7 +518,7 @@ namespace MarkEdit.App.Forms
             textBox.Multiline = true;
             textBox.Name = "textBox";
             textBox.ScrollBars = ScrollBars.Both;
-            textBox.Size = new Size(347, 261);
+            textBox.Size = new Size(344, 229);
             textBox.TabIndex = 0;
             textBox.WordWrap = false;
             // 
@@ -510,25 +531,101 @@ namespace MarkEdit.App.Forms
             webView.Location = new Point(0, 0);
             webView.Margin = new Padding(3, 2, 3, 2);
             webView.Name = "webView";
-            webView.Size = new Size(349, 261);
+            webView.Size = new Size(346, 229);
             webView.TabIndex = 0;
             webView.ZoomFactor = 1D;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(searchPanel, 0, 0);
+            tableLayoutPanel1.Controls.Add(splitContainer, 0, 1);
+            tableLayoutPanel1.Controls.Add(statusStrip, 0, 2);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 51);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(700, 287);
+            tableLayoutPanel1.TabIndex = 3;
+            // 
+            // searchPanel
+            // 
+            searchPanel.ColumnCount = 4;
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 29F));
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+            searchPanel.Controls.Add(nextSeachPanelButton, 2, 0);
+            searchPanel.Controls.Add(previousSearchPanelButton, 3, 0);
+            searchPanel.Controls.Add(closeSearchPanelButton, 0, 0);
+            searchPanel.Controls.Add(searchPanelTextBox, 1, 0);
+            searchPanel.Dock = DockStyle.Top;
+            searchPanel.Location = new Point(3, 3);
+            searchPanel.Name = "searchPanel";
+            searchPanel.RowCount = 1;
+            searchPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            searchPanel.Size = new Size(694, 28);
+            searchPanel.TabIndex = 2;
+            searchPanel.Visible = false;
+            // 
+            // nextSeachPanelButton
+            // 
+            nextSeachPanelButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            nextSeachPanelButton.Location = new Point(573, 3);
+            nextSeachPanelButton.Name = "nextSeachPanelButton";
+            nextSeachPanelButton.Size = new Size(56, 22);
+            nextSeachPanelButton.TabIndex = 1;
+            nextSeachPanelButton.Text = "Next";
+            nextSeachPanelButton.UseVisualStyleBackColor = true;
+            // 
+            // previousSearchPanelButton
+            // 
+            previousSearchPanelButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            previousSearchPanelButton.Location = new Point(635, 3);
+            previousSearchPanelButton.Name = "previousSearchPanelButton";
+            previousSearchPanelButton.Size = new Size(56, 22);
+            previousSearchPanelButton.TabIndex = 2;
+            previousSearchPanelButton.Text = "Prev";
+            previousSearchPanelButton.UseVisualStyleBackColor = true;
+            // 
+            // closeSearchPanelButton
+            // 
+            closeSearchPanelButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            closeSearchPanelButton.Location = new Point(3, 3);
+            closeSearchPanelButton.Name = "closeSearchPanelButton";
+            closeSearchPanelButton.Size = new Size(23, 22);
+            closeSearchPanelButton.TabIndex = 3;
+            closeSearchPanelButton.Text = "X";
+            closeSearchPanelButton.UseVisualStyleBackColor = true;
+            // 
+            // searchPanelTextBox
+            // 
+            searchPanelTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            searchPanelTextBox.Location = new Point(32, 3);
+            searchPanelTextBox.Name = "searchPanelTextBox";
+            searchPanelTextBox.Size = new Size(535, 23);
+            searchPanelTextBox.TabIndex = 0;
+            searchPanelTextBox.TextChanged += SearchPanelTextBox_TextChanged;
             // 
             // statusStrip
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
-            statusStrip.Location = new Point(0, 316);
+            statusStrip.Location = new Point(0, 267);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 12, 0);
-            statusStrip.Size = new Size(700, 22);
+            statusStrip.Size = new Size(700, 20);
             statusStrip.TabIndex = 2;
             statusStrip.Text = "statusStrip1";
             // 
             // toolStripStatusLabel
             // 
             toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(62, 17);
+            toolStripStatusLabel.Size = new Size(62, 15);
             toolStripStatusLabel.Text = "Ln 1, Col 1";
             // 
             // quickAccess
@@ -855,9 +952,8 @@ namespace MarkEdit.App.Forms
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
+            Controls.Add(tableLayoutPanel1);
             Controls.Add(quickAccess);
-            Controls.Add(statusStrip);
-            Controls.Add(splitContainer);
             Controls.Add(menuStrip);
             MainMenuStrip = menuStrip;
             Margin = new Padding(3, 2, 3, 2);
@@ -872,6 +968,10 @@ namespace MarkEdit.App.Forms
             ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
             splitContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            searchPanel.ResumeLayout(false);
+            searchPanel.PerformLayout();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             quickAccess.ResumeLayout(false);
@@ -982,5 +1082,12 @@ namespace MarkEdit.App.Forms
         private ToolStripMenuItem toggleSourceViewToolStripMenuItem;
         private ToolStripMenuItem splitViewToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator14;
+        private Panel panel1;
+        private TextBox searchPanelTextBox;
+        private Button previousSearchPanelButton;
+        private Button nextSeachPanelButton;
+        private Button closeSearchPanelButton;
+        private TableLayoutPanel searchPanel;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }
