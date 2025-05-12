@@ -82,6 +82,12 @@ namespace MarkEdit.App.Forms
             customizeToolStripMenuItem = new ToolStripMenuItem();
             optionsToolStripMenuItem = new ToolStripMenuItem();
             splitContainer = new SplitContainer();
+            searchPanel = new TableLayoutPanel();
+            nextSeachPanelButton = new Button();
+            previousSearchPanelButton = new Button();
+            closeSearchPanelButton = new Button();
+            searchPanelTextBox = new TextBox();
+            panel1 = new Panel();
             textBox = new ExtendedTextBox();
             webView = new Microsoft.Web.WebView2.WinForms.WebView2();
             statusStrip = new StatusStrip();
@@ -135,6 +141,7 @@ namespace MarkEdit.App.Forms
             splitContainer.Panel1.SuspendLayout();
             splitContainer.Panel2.SuspendLayout();
             splitContainer.SuspendLayout();
+            searchPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)webView).BeginInit();
             statusStrip.SuspendLayout();
             quickAccess.SuspendLayout();
@@ -216,27 +223,27 @@ namespace MarkEdit.App.Forms
             // 
             undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             undoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
-            undoToolStripMenuItem.Size = new Size(144, 22);
+            undoToolStripMenuItem.Size = new Size(180, 22);
             undoToolStripMenuItem.Text = "&Undo";
             // 
             // redoToolStripMenuItem
             // 
             redoToolStripMenuItem.Name = "redoToolStripMenuItem";
             redoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Y;
-            redoToolStripMenuItem.Size = new Size(144, 22);
+            redoToolStripMenuItem.Size = new Size(180, 22);
             redoToolStripMenuItem.Text = "&Redo";
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(141, 6);
+            toolStripSeparator3.Size = new Size(177, 6);
             // 
             // cutToolStripMenuItem
             // 
             cutToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             cutToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.X;
-            cutToolStripMenuItem.Size = new Size(144, 22);
+            cutToolStripMenuItem.Size = new Size(180, 22);
             cutToolStripMenuItem.Text = "Cu&t";
             // 
             // copyToolStripMenuItem
@@ -244,7 +251,7 @@ namespace MarkEdit.App.Forms
             copyToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             copyToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.C;
-            copyToolStripMenuItem.Size = new Size(144, 22);
+            copyToolStripMenuItem.Size = new Size(180, 22);
             copyToolStripMenuItem.Text = "&Copy";
             // 
             // pasteToolStripMenuItem
@@ -252,41 +259,42 @@ namespace MarkEdit.App.Forms
             pasteToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             pasteToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.V;
-            pasteToolStripMenuItem.Size = new Size(144, 22);
+            pasteToolStripMenuItem.Size = new Size(180, 22);
             pasteToolStripMenuItem.Text = "&Paste";
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new Size(141, 6);
+            toolStripSeparator4.Size = new Size(177, 6);
             // 
             // findToolStripMenuItem
             // 
             findToolStripMenuItem.Name = "findToolStripMenuItem";
-            findToolStripMenuItem.Size = new Size(144, 22);
+            findToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F;
+            findToolStripMenuItem.Size = new Size(180, 22);
             findToolStripMenuItem.Text = "Find";
             // 
             // replaceToolStripMenuItem
             // 
             replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
-            replaceToolStripMenuItem.Size = new Size(144, 22);
+            replaceToolStripMenuItem.Size = new Size(180, 22);
             replaceToolStripMenuItem.Text = "Replace";
             // 
             // goToToolStripMenuItem
             // 
             goToToolStripMenuItem.Name = "goToToolStripMenuItem";
-            goToToolStripMenuItem.Size = new Size(144, 22);
+            goToToolStripMenuItem.Size = new Size(180, 22);
             goToToolStripMenuItem.Text = "Go to";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(141, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-            selectAllToolStripMenuItem.Size = new Size(144, 22);
+            selectAllToolStripMenuItem.Size = new Size(180, 22);
             selectAllToolStripMenuItem.Text = "Select &All";
             // 
             // viewToolStripMenuItem
@@ -299,31 +307,31 @@ namespace MarkEdit.App.Forms
             // togglePreviewToolStripMenuItem
             // 
             togglePreviewToolStripMenuItem.Name = "togglePreviewToolStripMenuItem";
-            togglePreviewToolStripMenuItem.Size = new Size(177, 22);
+            togglePreviewToolStripMenuItem.Size = new Size(180, 22);
             togglePreviewToolStripMenuItem.Text = "Toggle Preview";
             // 
             // toggleSourceViewToolStripMenuItem
             // 
             toggleSourceViewToolStripMenuItem.Name = "toggleSourceViewToolStripMenuItem";
-            toggleSourceViewToolStripMenuItem.Size = new Size(177, 22);
+            toggleSourceViewToolStripMenuItem.Size = new Size(180, 22);
             toggleSourceViewToolStripMenuItem.Text = "Toggle Source View";
             // 
             // splitViewToolStripMenuItem
             // 
             splitViewToolStripMenuItem.Name = "splitViewToolStripMenuItem";
-            splitViewToolStripMenuItem.Size = new Size(177, 22);
+            splitViewToolStripMenuItem.Size = new Size(180, 22);
             splitViewToolStripMenuItem.Text = "Split View";
             // 
             // toolStripSeparator14
             // 
             toolStripSeparator14.Name = "toolStripSeparator14";
-            toolStripSeparator14.Size = new Size(174, 6);
+            toolStripSeparator14.Size = new Size(177, 6);
             // 
             // zoomToolStripMenuItem
             // 
             zoomToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { zoomInToolStripMenuItem, zoomOutToolStripMenuItem, toolStripSeparator5, restoreToolStripMenuItem });
             zoomToolStripMenuItem.Name = "zoomToolStripMenuItem";
-            zoomToolStripMenuItem.Size = new Size(177, 22);
+            zoomToolStripMenuItem.Size = new Size(180, 22);
             zoomToolStripMenuItem.Text = "Zoom";
             // 
             // zoomInToolStripMenuItem
@@ -360,28 +368,28 @@ namespace MarkEdit.App.Forms
             // 
             boldToolStripMenuItem.Name = "boldToolStripMenuItem";
             boldToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.B;
-            boldToolStripMenuItem.Size = new Size(168, 22);
+            boldToolStripMenuItem.Size = new Size(180, 22);
             boldToolStripMenuItem.Text = "Bold";
             // 
             // italicToolStripMenuItem
             // 
             italicToolStripMenuItem.Name = "italicToolStripMenuItem";
             italicToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.I;
-            italicToolStripMenuItem.Size = new Size(168, 22);
+            italicToolStripMenuItem.Size = new Size(180, 22);
             italicToolStripMenuItem.Text = "Italic";
             // 
             // codeToolStripMenuItem
             // 
             codeToolStripMenuItem.Name = "codeToolStripMenuItem";
             codeToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Oem3;
-            codeToolStripMenuItem.Size = new Size(168, 22);
+            codeToolStripMenuItem.Size = new Size(180, 22);
             codeToolStripMenuItem.Text = "Code";
             // 
             // headingToolStripMenuItem
             // 
             headingToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { h1ToolStripMenuItem, h2ToolStripMenuItem, h3ToolStripMenuItem, h4ToolStripMenuItem, h5ToolStripMenuItem, h6ToolStripMenuItem });
             headingToolStripMenuItem.Name = "headingToolStripMenuItem";
-            headingToolStripMenuItem.Size = new Size(168, 22);
+            headingToolStripMenuItem.Size = new Size(180, 22);
             headingToolStripMenuItem.Text = "Heading Levels";
             // 
             // h1ToolStripMenuItem
@@ -430,7 +438,7 @@ namespace MarkEdit.App.Forms
             // 
             listToolStripMenu.DropDownItems.AddRange(new ToolStripItem[] { bulletListToolStripMenuItem, numberedListToolStripMenuItem });
             listToolStripMenu.Name = "listToolStripMenu";
-            listToolStripMenu.Size = new Size(168, 22);
+            listToolStripMenu.Size = new Size(180, 22);
             listToolStripMenu.Text = "List";
             // 
             // bulletListToolStripMenuItem
@@ -448,7 +456,7 @@ namespace MarkEdit.App.Forms
             // linkToolStripMenuItem
             // 
             linkToolStripMenuItem.Name = "linkToolStripMenuItem";
-            linkToolStripMenuItem.Size = new Size(168, 22);
+            linkToolStripMenuItem.Size = new Size(180, 22);
             linkToolStripMenuItem.Text = "Link";
             // 
             // toolsToolStripMenuItem
@@ -479,14 +487,86 @@ namespace MarkEdit.App.Forms
             // 
             // splitContainer.Panel1
             // 
+            splitContainer.Panel1.Controls.Add(searchPanel);
+            splitContainer.Panel1.Controls.Add(panel1);
             splitContainer.Panel1.Controls.Add(textBox);
             // 
             // splitContainer.Panel2
             // 
             splitContainer.Panel2.Controls.Add(webView);
-            splitContainer.Size = new Size(700, 261);
+            splitContainer.Size = new Size(700, 265);
             splitContainer.SplitterDistance = 347;
             splitContainer.TabIndex = 1;
+            // 
+            // searchPanel
+            // 
+            searchPanel.ColumnCount = 4;
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 29F));
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+            searchPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 62F));
+            searchPanel.Controls.Add(nextSeachPanelButton, 2, 0);
+            searchPanel.Controls.Add(previousSearchPanelButton, 3, 0);
+            searchPanel.Controls.Add(closeSearchPanelButton, 0, 0);
+            searchPanel.Controls.Add(searchPanelTextBox, 1, 0);
+            searchPanel.Dock = DockStyle.Top;
+            searchPanel.Location = new Point(0, 2);
+            searchPanel.Name = "searchPanel";
+            searchPanel.RowCount = 1;
+            searchPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            searchPanel.Size = new Size(347, 31);
+            searchPanel.TabIndex = 2;
+            searchPanel.Visible = false;
+            // 
+            // nextSeachPanelButton
+            // 
+            nextSeachPanelButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            nextSeachPanelButton.Location = new Point(226, 3);
+            nextSeachPanelButton.Name = "nextSeachPanelButton";
+            nextSeachPanelButton.Size = new Size(56, 23);
+            nextSeachPanelButton.TabIndex = 1;
+            nextSeachPanelButton.Text = "Next";
+            nextSeachPanelButton.UseVisualStyleBackColor = true;
+            // 
+            // previousSearchPanelButton
+            // 
+            previousSearchPanelButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            previousSearchPanelButton.Location = new Point(288, 3);
+            previousSearchPanelButton.Name = "previousSearchPanelButton";
+            previousSearchPanelButton.Size = new Size(56, 23);
+            previousSearchPanelButton.TabIndex = 2;
+            previousSearchPanelButton.Text = "Prev";
+            previousSearchPanelButton.UseVisualStyleBackColor = true;
+            // 
+            // closeSearchPanelButton
+            // 
+            closeSearchPanelButton.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            closeSearchPanelButton.Location = new Point(3, 3);
+            closeSearchPanelButton.Name = "closeSearchPanelButton";
+            closeSearchPanelButton.Size = new Size(23, 23);
+            closeSearchPanelButton.TabIndex = 3;
+            closeSearchPanelButton.Text = "X";
+            closeSearchPanelButton.UseVisualStyleBackColor = true;
+            // 
+            // searchPanelTextBox
+            // 
+            searchPanelTextBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            searchPanelTextBox.Location = new Point(32, 3);
+            searchPanelTextBox.Name = "searchPanelTextBox";
+            searchPanelTextBox.Size = new Size(188, 23);
+            searchPanelTextBox.TabIndex = 0;
+            searchPanelTextBox.TextChanged += SearchPanelTextBox_TextChanged;
+            // 
+            // panel1
+            // 
+            panel1.AutoSize = true;
+            panel1.BackColor = Color.Transparent;
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(347, 2);
+            panel1.TabIndex = 1;
             // 
             // textBox
             // 
@@ -497,7 +577,7 @@ namespace MarkEdit.App.Forms
             textBox.Multiline = true;
             textBox.Name = "textBox";
             textBox.ScrollBars = ScrollBars.Both;
-            textBox.Size = new Size(347, 261);
+            textBox.Size = new Size(347, 265);
             textBox.TabIndex = 0;
             textBox.WordWrap = false;
             // 
@@ -510,7 +590,7 @@ namespace MarkEdit.App.Forms
             webView.Location = new Point(0, 0);
             webView.Margin = new Padding(3, 2, 3, 2);
             webView.Name = "webView";
-            webView.Size = new Size(349, 261);
+            webView.Size = new Size(349, 265);
             webView.TabIndex = 0;
             webView.ZoomFactor = 1D;
             // 
@@ -871,6 +951,8 @@ namespace MarkEdit.App.Forms
             splitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainer).EndInit();
             splitContainer.ResumeLayout(false);
+            searchPanel.ResumeLayout(false);
+            searchPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
@@ -982,5 +1064,11 @@ namespace MarkEdit.App.Forms
         private ToolStripMenuItem toggleSourceViewToolStripMenuItem;
         private ToolStripMenuItem splitViewToolStripMenuItem;
         private ToolStripSeparator toolStripSeparator14;
+        private Panel panel1;
+        private TextBox searchPanelTextBox;
+        private Button previousSearchPanelButton;
+        private Button nextSeachPanelButton;
+        private Button closeSearchPanelButton;
+        private TableLayoutPanel searchPanel;
     }
 }

@@ -11,6 +11,7 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
+using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 using Microsoft.Web.WebView2.Core;
@@ -29,7 +30,8 @@ public partial class MainForm : Form
     private IViewState _currentViewState;
     private IAppStateService _appStateService;
     private AppState _appState;
-
+    private SearchContext _searchContext;
+    
     public SplitContainer SplitContainer => splitContainer;
 
     public MainForm()
@@ -42,8 +44,9 @@ public partial class MainForm : Form
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
         WireUpViewMenuCommands();
+        WireUpSearchPanelCommands();
     }
-    
+
     private void InitializeServices()
     {
         _editor = new TextBoxAdapter(textBox);
@@ -55,8 +58,9 @@ public partial class MainForm : Form
         _listContinuation = new ListContinuationHelper();
         _appStateService = new JsonAppStateService();
         _appState = _appStateService.Load();
+        _searchContext = new SearchContext();
     }
-    
+
     private void InitializeWebView()
     {
         webView.CoreWebView2InitializationCompleted += (_, e) =>
@@ -69,14 +73,14 @@ public partial class MainForm : Form
 
         _ = webView.EnsureCoreWebView2Async(null);
     }
-    
+
     private void RegisterTextEditorEvents()
     {
         textBox.CharacterInserted += OnCharacterInsert;
         textBox.TextDeleted += OnTextDelete;
         textBox.TextChanged += OnTextChanged;
     }
-    
+
     private void WireUpMenuStripCommands()
     {
         //File commands
@@ -106,6 +110,20 @@ public partial class MainForm : Form
         //List commands
         BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
         BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
+        //Search
+        BindClick(findToolStripMenuItem, () =>
+        {
+            if (searchPanel.Visible)
+            {
+                searchPanel.Visible = false;
+                textBox.Focus();
+            }
+            else
+            {
+                searchPanel.Visible = true;
+                searchPanelTextBox.Focus();
+            }
+        });
     }
 
     private void WireUpQuickAccessCommands()
@@ -143,7 +161,7 @@ public partial class MainForm : Form
     private void WireUpContextMenuCommands()
     {
         textBox.ContextMenuStrip = contextMenuStrip;
-        
+
         //History commands
         BindClick(undoContextMenuItem, _commandManager.Undo);
         BindClick(redoContextMenuItem, _commandManager.Redo);
@@ -158,7 +176,7 @@ public partial class MainForm : Form
         //Link command
         BindClick(linkContextMenuItem, () => new LinkCommand(_editor, _linkProvider));
     }
-    
+
     private void BindClick(ToolStripItem item, Func<ICommand> commandFactory)
     {
         item.Click += (_, _) => _commandManager.Execute(commandFactory());
@@ -169,12 +187,17 @@ public partial class MainForm : Form
         item.Click += (_, _) => action();
     }
 
+    private void BindClick(Button button, Action action)
+    {
+        button.Click += (_, _) => action();
+    }
+
     private void OnTextChanged(object? sender, EventArgs e)
     {
         var index = textBox.SelectionStart;
         var line = textBox.GetLineFromCharIndex(index);
         var column = index - textBox.GetFirstCharIndexOfCurrentLine();
-        
+
         toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
 
         _document.Content = _editor.Text;
@@ -211,13 +234,13 @@ public partial class MainForm : Form
             _commandManager.Save(new DeleteCommand(_editor, e.Position, e.DeletedText));
         }
     }
-    
+
     private void UpdatePreview(string content)
     {
         var html = Markdown.ToHtml(content);
         webView.CoreWebView2?.NavigateToString($"<html><body>{html}</body></html>");
     }
-    
+
     private void CoreWebView2_NavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
     {
         if (e.IsUserInitiated)
@@ -225,19 +248,19 @@ public partial class MainForm : Form
             e.Cancel = true;
         }
     }
-    
+
     private void WireUpViewMenuCommands()
     {
         BindClick(togglePreviewToolStripMenuItem, () => SetViewState(new PreviewOnlyState()));
         BindClick(toggleSourceViewToolStripMenuItem, () => SetViewState(new SourceOnlyState()));
         BindClick(splitViewToolStripMenuItem, () => SetViewState(new SplitViewState()));
     }
-    
+
     private void SetViewState(IViewState state)
     {
         _currentViewState = state;
         state.Apply(this);
-        
+
         _appState.ViewState = state switch
         {
             PreviewOnlyState => ViewStateType.Preview,
@@ -245,7 +268,7 @@ public partial class MainForm : Form
             _ => ViewStateType.Split
         };
     }
-    
+
     public void SetViewMenuChecks(bool preview, bool source, bool split)
     {
         togglePreviewToolStripMenuItem.Checked = preview;
@@ -260,26 +283,56 @@ public partial class MainForm : Form
             _document.Load(_appState.LastOpenedFilePath);
             _editor.Text = _document.Content;
         }
-        
+
         IViewState viewState = _appState.ViewState switch
         {
             ViewStateType.Preview => new PreviewOnlyState(),
             ViewStateType.Source => new SourceOnlyState(),
             _ => new SplitViewState(),
         };
-        
+
         SetViewState(viewState);
     }
-    
+
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         _appStateService.Save(_appState);
         base.OnFormClosing(e);
     }
-    
+
     private void WithFilePathUpdate(ICommand command)
     {
         _commandManager.Execute(command);
         _appState.LastOpenedFilePath = _document.FilePath;
+    }
+
+    private void WireUpSearchPanelCommands()
+    {
+        BindClick(closeSearchPanelButton, () => searchPanel.Visible = false);
+        BindClick(nextSeachPanelButton, () => WithActiveSearchPanel(new FindNextCommand(_editor, _searchContext)));
+        BindClick(previousSearchPanelButton, () => WithActiveSearchPanel(new FindPreviousCommand(_editor, _searchContext)));
+    }
+
+    private void SearchPanelTextBox_TextChanged(object sender, EventArgs e)
+    {
+        if (!searchPanel.Visible)
+        {
+            return;
+        }
+        
+        _searchContext.CurrentTerm = searchPanelTextBox.Text;
+        _searchContext.LastMatchIndex = -1;
+    }
+
+    private void WithActiveSearchPanel(ICommand command)
+    {
+        if (!searchPanel.Visible)
+        {
+            searchPanel.Visible = true;
+            return;
+        }
+
+        textBox.Focus();
+        _commandManager.Execute(command);
     }
 }
