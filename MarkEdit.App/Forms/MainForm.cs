@@ -11,6 +11,7 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
+using MarkEdit.Commands.Replace;
 using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
@@ -44,7 +45,7 @@ public partial class MainForm : Form
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
         WireUpViewMenuCommands();
-        WireUpSearchPanelCommands();
+        SetupSearchReplaceControl();
     }
 
     private void InitializeServices()
@@ -110,19 +111,21 @@ public partial class MainForm : Form
         //List commands
         BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
         BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
-        //Search
+        //Search + Replace commands
         BindClick(findToolStripMenuItem, () =>
         {
-            if (searchPanel.Visible)
-            {
-                searchPanel.Visible = false;
-                textBox.Focus();
-            }
-            else
-            {
-                searchPanel.Visible = true;
-                searchPanelTextBox.Focus();
-            }
+            searchReplaceControl.Show();
+            searchReplaceControl.SearchTextBox.Focus();
+            searchReplaceControl.SearchTextBox.SelectAll();
+        });
+        BindClick(findNextToolStripMenuItem, () => new FindNextCommand(_editor, _searchContext));
+        BindClick(findPreviousToolStripMenuItem, () => new FindPreviousCommand(_editor, _searchContext));
+        BindClick(replaceToolStripMenuItem, () =>
+        {
+            searchReplaceControl.Show();
+            searchReplaceControl.ShowReplacePanel();
+            searchReplaceControl.SearchTextBox.Focus();
+            searchReplaceControl.SearchTextBox.SelectAll();
         });
     }
 
@@ -305,34 +308,70 @@ public partial class MainForm : Form
         _commandManager.Execute(command);
         _appState.LastOpenedFilePath = _document.FilePath;
     }
-
-    private void WireUpSearchPanelCommands()
+    
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        BindClick(closeSearchPanelButton, () => searchPanel.Visible = false);
-        BindClick(nextSeachPanelButton, () => WithActiveSearchPanel(new FindNextCommand(_editor, _searchContext)));
-        BindClick(previousSearchPanelButton, () => WithActiveSearchPanel(new FindPreviousCommand(_editor, _searchContext)));
-    }
-
-    private void SearchPanelTextBox_TextChanged(object sender, EventArgs e)
-    {
-        if (!searchPanel.Visible)
+        if (keyData != Keys.Escape || !searchReplaceControl.Visible)
         {
-            return;
+            return base.ProcessCmdKey(ref msg, keyData);
         }
-
-        _searchContext.CurrentTerm = searchPanelTextBox.Text;
-        _searchContext.LastMatchIndex = -1;
-    }
-
-    private void WithActiveSearchPanel(ICommand command)
-    {
-        if (!searchPanel.Visible)
-        {
-            searchPanel.Visible = true;
-            return;
-        }
-
+        
+        searchReplaceControl.Hide();
+        searchReplaceControl.HideReplacePanel();
         textBox.Focus();
-        _commandManager.Execute(command);
+        return true;
+    }
+
+    private void SetupSearchReplaceControl()
+    {
+        searchReplaceControl.SearchTextChanged += (_, _) =>
+        {
+            if (searchReplaceControl.Visible)
+            {
+                _searchContext.CurrentTerm = searchReplaceControl.SearchTextBox.Text;
+                _searchContext.LastMatchIndex = -1;
+            }
+        };
+        
+        searchReplaceControl.SearchTextBox.KeyDown += (_, e) =>
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                textBox.Focus();
+                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+            }
+        };
+
+        searchReplaceControl.SearchNextClicked += (_, _) =>
+        {
+            textBox.Focus();
+            _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+        };
+
+        searchReplaceControl.SearchPreviousClicked += (_, _) =>
+        {
+            textBox.Focus();
+            _commandManager.Execute(new FindPreviousCommand(_editor, _searchContext));
+        };
+
+        searchReplaceControl.ReplaceClicked += (_, _) =>
+        {
+            textBox.Focus();
+            if (textBox.SelectionLength == 0)
+            {
+                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+            }
+            _commandManager.Execute(new ReplaceCommand(_editor, _searchContext, searchReplaceControl.ReplaceTextBox.Text));
+        };
+
+        searchReplaceControl.ReplaceAllClicked += (_, _) =>
+        {
+            textBox.Focus();
+            _commandManager.Execute(new ReplaceAllCommand(
+                _editor,
+                searchReplaceControl.SearchTextBox.Text,
+                searchReplaceControl.ReplaceTextBox.Text));
+        };
     }
 }

@@ -13,4 +13,5 @@ public interface ITextEditor
     void Select(int start, int length);
     int GetLineFromCharIndex(int index);
     int GetFirstCharIndexFromLine(int index);
+    void ScrollToCaret();
 }

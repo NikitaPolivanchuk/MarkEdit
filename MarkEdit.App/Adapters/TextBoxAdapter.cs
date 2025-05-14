@@ -66,4 +66,9 @@ public class TextBoxAdapter : ITextEditor
     {
         return _textBox.GetFirstCharIndexFromLine(index);
     }
+
+    public void ScrollToCaret()
+    {
+        _textBox.ScrollToCaret();
+    }
 }

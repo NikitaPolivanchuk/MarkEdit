@@ -26,6 +26,7 @@ public class FindPreviousCommand : ICommand
         if (index >= 0)
         {
             _editor.Select(index, _context.CurrentTerm.Length);
+            _editor.ScrollToCaret();
             _context.LastMatchIndex = index;
         }
     }
