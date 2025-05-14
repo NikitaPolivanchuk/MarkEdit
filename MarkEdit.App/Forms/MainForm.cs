@@ -26,7 +26,6 @@ public partial class MainForm : Form
     private IClipboard _clipboard;
     private Document _document;
     private IFileService _fileService;
-    private ILinkProvider _linkProvider;
     private ListContinuationHelper _listContinuation;
     private IViewState _currentViewState;
     private IAppStateService _appStateService;
@@ -55,7 +54,6 @@ public partial class MainForm : Form
         _clipboard = new ClipboardAdapter();
         _document = new Document();
         _fileService = new FileService();
-        _linkProvider = new LinkPromptProvider();
         _listContinuation = new ListContinuationHelper();
         _appStateService = new JsonAppStateService();
         _appState = _appStateService.Load();
@@ -107,7 +105,7 @@ public partial class MainForm : Form
         BindClick(h5ToolStripMenuItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6ToolStripMenuItem, () => new HeaderCommand(_editor, 6));
         //Link command
-        BindClick(linkToolStripMenuItem, () => new LinkCommand(_editor, _linkProvider));
+        BindClick(linkToolStripMenuItem, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
         //List commands
         BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
         BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
@@ -159,7 +157,7 @@ public partial class MainForm : Form
         BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
         BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
         //Link command
-        BindClick(linkQuickAccessButton, () => new LinkCommand(_editor, _linkProvider));
+        BindClick(linkQuickAccessButton, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
         //List commands
         BindClick(bulletListQuickAccessButton, () => new BulletListCommand(_editor));
         BindClick(numberedListQuickAccessButton, () => new NumberedListCommand(_editor));
@@ -181,7 +179,7 @@ public partial class MainForm : Form
         BindClick(italicContextMenuItem, () => new ItalicCommand(_editor));
         BindClick(codeContextMenuItem, () => new CodeCommand(_editor));
         //Link command
-        BindClick(linkContextMenuItem, () => new LinkCommand(_editor, _linkProvider));
+        BindClick(linkContextMenuItem, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
         //Select all command
         BindClick(selectAllContextMenuItem, textBox.SelectAll);
     }

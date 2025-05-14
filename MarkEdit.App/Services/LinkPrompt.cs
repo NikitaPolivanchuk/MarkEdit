@@ -1,11 +1,10 @@
 using MarkEdit.App.Forms;
-using MarkEdit.Core;
 
 namespace MarkEdit.App.Services;
 
-public class LinkPromptProvider : ILinkProvider
+public static class LinkPrompt
 {
-    public string GetUrlLink()
+    public static string GetUrlLink()
     {
         var form = new PromptForm();
         form.Text = "Insert Link";

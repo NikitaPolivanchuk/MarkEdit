@@ -10,20 +10,17 @@ public class LinkCommand : IRevertibleCommand
     private readonly string _originalText;
     private readonly int _selectionStart;
     private readonly int _selectionLength;
-    private readonly string? _url;
+    private readonly string _url;
     
     private int _newSelectionLength;
 
-    public LinkCommand(ITextEditor editor, ILinkProvider linkProvider)
+    public LinkCommand(ITextEditor editor, string url)
     {
         _editor = editor;
         _originalText = _editor.SelectedText;
         _selectionStart = _editor.SelectionStart;
         _selectionLength = _editor.SelectionLength;
-        if (_selectionLength > 0)
-        {
-            _url = linkProvider.GetUrlLink();
-        }
+        _url = url;
     }
 
     public void Execute()
