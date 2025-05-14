@@ -111,7 +111,7 @@ public partial class MainForm : Form
         //List commands
         BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
         BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
-        //Search
+        //Search + Replace commands
         BindClick(findToolStripMenuItem, () =>
         {
             searchReplaceControl.Show();
@@ -120,6 +120,13 @@ public partial class MainForm : Form
         });
         BindClick(findNextToolStripMenuItem, () => new FindNextCommand(_editor, _searchContext));
         BindClick(findPreviousToolStripMenuItem, () => new FindPreviousCommand(_editor, _searchContext));
+        BindClick(replaceToolStripMenuItem, () =>
+        {
+            searchReplaceControl.Show();
+            searchReplaceControl.ShowReplacePanel();
+            searchReplaceControl.SearchTextBox.Focus();
+            searchReplaceControl.SearchTextBox.SelectAll();
+        });
     }
 
     private void WireUpQuickAccessCommands()
@@ -310,6 +317,7 @@ public partial class MainForm : Form
         }
         
         searchReplaceControl.Hide();
+        searchReplaceControl.HideReplacePanel();
         textBox.Focus();
         return true;
     }

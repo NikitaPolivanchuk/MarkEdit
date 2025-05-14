@@ -19,6 +19,18 @@ public partial class SearchReplaceControl : UserControl
         InitializeComponent();
     }
     
+    public void ShowReplacePanel()
+    {
+        replacePanel.Visible = true;
+        toggleReplaceButton.Text = "▼";
+    }
+
+    public void HideReplacePanel()
+    {
+        replacePanel.Visible = false;
+        toggleReplaceButton.Text = "▲";
+    }
+    
     private void SearchTextbox_TextChanged(object sender, EventArgs e)
     {
         SearchTextChanged?.Invoke(this, e);
@@ -56,7 +68,14 @@ public partial class SearchReplaceControl : UserControl
 
     private void ToggleReplaceButton_Click(object sender, EventArgs e)
     {
-        replacePanel.Visible = !replacePanel.Visible;
-        toggleReplaceButton.Text = replacePanel.Visible ? "▼" : "▲";
+        if (replacePanel.Visible)
+        {
+            HideReplacePanel();
+        }
+        else
+        {
+            ShowReplacePanel();
+        }
+        
     }
 }
