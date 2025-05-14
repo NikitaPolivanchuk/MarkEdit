@@ -11,6 +11,7 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
+using MarkEdit.Commands.Replace;
 using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
@@ -344,6 +345,25 @@ public partial class MainForm : Form
         {
             textBox.Focus();
             _commandManager.Execute(new FindPreviousCommand(_editor, _searchContext));
+        };
+
+        searchReplaceControl.ReplaceClicked += (_, _) =>
+        {
+            textBox.Focus();
+            if (textBox.SelectionLength == 0)
+            {
+                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+            }
+            _commandManager.Execute(new ReplaceCommand(_editor, _searchContext, searchReplaceControl.ReplaceTextBox.Text));
+        };
+
+        searchReplaceControl.ReplaceAllClicked += (_, _) =>
+        {
+            textBox.Focus();
+            _commandManager.Execute(new ReplaceAllCommand(
+                _editor,
+                searchReplaceControl.SearchTextBox.Text,
+                searchReplaceControl.ReplaceTextBox.Text));
         };
     }
 }
