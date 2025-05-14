@@ -127,6 +127,8 @@ public partial class MainForm : Form
             searchReplaceControl.SearchTextBox.Focus();
             searchReplaceControl.SearchTextBox.SelectAll();
         });
+        //Select All command
+        BindClick(selectAllToolStripMenuItem, textBox.SelectAll);
     }
 
     private void WireUpQuickAccessCommands()
@@ -178,6 +180,8 @@ public partial class MainForm : Form
         BindClick(codeContextMenuItem, () => new CodeCommand(_editor));
         //Link command
         BindClick(linkContextMenuItem, () => new LinkCommand(_editor, _linkProvider));
+        //Select all command
+        BindClick(selectAllContextMenuItem, textBox.SelectAll);
     }
 
     private void BindClick(ToolStripItem item, Func<ICommand> commandFactory)
