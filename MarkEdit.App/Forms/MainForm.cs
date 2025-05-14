@@ -11,6 +11,7 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
+using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 using Microsoft.Web.WebView2.Core;
@@ -43,6 +44,7 @@ public partial class MainForm : Form
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
         WireUpViewMenuCommands();
+        SetupSearchReplaceControl();
     }
 
     private void InitializeServices()
@@ -109,7 +111,14 @@ public partial class MainForm : Form
         BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
         BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
         //Search
-        BindClick(findToolStripMenuItem, ToggleSearchReplaceControl);
+        BindClick(findToolStripMenuItem, () =>
+        {
+            searchReplaceControl.Show();
+            searchReplaceControl.SearchTextBox.Focus();
+            searchReplaceControl.SearchTextBox.SelectAll();
+        });
+        BindClick(findNextToolStripMenuItem, () => new FindNextCommand(_editor, _searchContext));
+        BindClick(findPreviousToolStripMenuItem, () => new FindPreviousCommand(_editor, _searchContext));
     }
 
     private void WireUpQuickAccessCommands()
@@ -291,18 +300,50 @@ public partial class MainForm : Form
         _commandManager.Execute(command);
         _appState.LastOpenedFilePath = _document.FilePath;
     }
-
-    private void ToggleSearchReplaceControl()
+    
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        if (searchReplaceControl.Visible)
+        if (keyData != Keys.Escape || !searchReplaceControl.Visible)
         {
-            searchReplaceControl.Hide();
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+        
+        searchReplaceControl.Hide();
+        textBox.Focus();
+        return true;
+    }
+
+    private void SetupSearchReplaceControl()
+    {
+        searchReplaceControl.SearchTextChanged += (_, _) =>
+        {
+            if (searchReplaceControl.Visible)
+            {
+                _searchContext.CurrentTerm = searchReplaceControl.SearchTextBox.Text;
+                _searchContext.LastMatchIndex = -1;
+            }
+        };
+        
+        searchReplaceControl.SearchTextBox.KeyDown += (_, e) =>
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                textBox.Focus();
+                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+            }
+        };
+
+        searchReplaceControl.SearchNextClicked += (_, _) =>
+        {
             textBox.Focus();
-        }
-        else
+            _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+        };
+
+        searchReplaceControl.SearchPreviousClicked += (_, _) =>
         {
-            searchReplaceControl.Show();
-            searchReplaceControl.SearchTextBox.Focus();
-        }
+            textBox.Focus();
+            _commandManager.Execute(new FindPreviousCommand(_editor, _searchContext));
+        };
     }
 }
