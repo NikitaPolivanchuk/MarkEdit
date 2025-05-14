@@ -1,4 +1,6 @@
 using MarkEdit.App.Events;
+using MarkEdit.App.Extensions;
+using MarkEdit.App.Properties;
 
 namespace MarkEdit.App.Controls;
 
@@ -17,18 +19,22 @@ public partial class SearchReplaceControl : UserControl
     public SearchReplaceControl()
     {
         InitializeComponent();
+
+        showPreviousButton.Image = Resources.arrow_up.ResizeImage(showPreviousButton.ClientSize, 4);
+        showNextButton.Image = Resources.arrow_down.ResizeImage(showNextButton.ClientSize, 4);
+        toggleReplaceButton.Image = Resources.caret_up.ResizeImage(toggleReplaceButton.ClientSize, 4);
     }
     
     public void ShowReplacePanel()
     {
         replacePanel.Visible = true;
-        toggleReplaceButton.Text = "▼";
+        toggleReplaceButton.Image = Resources.caret_down.ResizeImage(toggleReplaceButton.ClientSize, 4);
     }
 
     public void HideReplacePanel()
     {
         replacePanel.Visible = false;
-        toggleReplaceButton.Text = "▲";
+        toggleReplaceButton.Image = Resources.caret_up.ResizeImage(toggleReplaceButton.ClientSize, 4);
     }
     
     private void SearchTextbox_TextChanged(object sender, EventArgs e)

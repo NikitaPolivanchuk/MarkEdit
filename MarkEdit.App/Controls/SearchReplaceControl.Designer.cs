@@ -56,7 +56,6 @@ partial class SearchReplaceControl
         showNextButton.Name = "showNextButton";
         showNextButton.Size = new Size(23, 23);
         showNextButton.TabIndex = 1;
-        showNextButton.Text = "↓";
         showNextButton.Click += ShowNextButton_Click;
         // 
         // showPreviousButton
@@ -65,7 +64,6 @@ partial class SearchReplaceControl
         showPreviousButton.Name = "showPreviousButton";
         showPreviousButton.Size = new Size(23, 23);
         showPreviousButton.TabIndex = 2;
-        showPreviousButton.Text = "↑";
         showPreviousButton.Click += ShowPreviousButton_Click;
         // 
         // replaceButton
@@ -92,7 +90,6 @@ partial class SearchReplaceControl
         toggleReplaceButton.Name = "toggleReplaceButton";
         toggleReplaceButton.Size = new Size(23, 23);
         toggleReplaceButton.TabIndex = 3;
-        toggleReplaceButton.Text = "▲";
         toggleReplaceButton.Click += ToggleReplaceButton_Click;
         // 
         // closeButton
