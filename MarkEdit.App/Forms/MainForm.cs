@@ -32,6 +32,8 @@ public partial class MainForm : Form
     private AppState _appState;
     private SearchContext _searchContext;
     private SearchHandler _searchHandler;
+    private ViewStateManager _viewStateManager;
+    
 
     public SplitContainer SplitContainer => splitContainer;
 
@@ -45,7 +47,6 @@ public partial class MainForm : Form
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
         WireUpViewMenuCommands();
-        SetupSearchReplaceControl();
     }
 
     private void InitializeServices()
@@ -59,6 +60,8 @@ public partial class MainForm : Form
         _appStateService = new JsonAppStateService();
         _appState = _appStateService.Load();
         _searchContext = new SearchContext();
+        _searchHandler = new SearchHandler(searchReplaceControl, _editor, _commandManager, _searchContext);
+        _viewStateManager = new ViewStateManager(this, _appState);
     }
 
     private void InitializeWebView()
@@ -259,22 +262,15 @@ public partial class MainForm : Form
 
     private void WireUpViewMenuCommands()
     {
-        BindClick(togglePreviewToolStripMenuItem, () => SetViewState(new PreviewOnlyState()));
-        BindClick(toggleSourceViewToolStripMenuItem, () => SetViewState(new SourceOnlyState()));
-        BindClick(splitViewToolStripMenuItem, () => SetViewState(new SplitViewState()));
+        BindClick(togglePreviewToolStripMenuItem, () => _viewStateManager.Apply(new PreviewOnlyState()));
+        BindClick(toggleSourceViewToolStripMenuItem, () => _viewStateManager.Apply(new SourceOnlyState()));
+        BindClick(splitViewToolStripMenuItem, () => _viewStateManager.Apply(new SplitViewState()));
     }
 
-    private void SetViewState(IViewState state)
+    internal void SetViewStateInternal(IViewState state)
     {
         _currentViewState = state;
         state.Apply(this);
-
-        _appState.ViewState = state switch
-        {
-            PreviewOnlyState => ViewStateType.Preview,
-            SourceOnlyState => ViewStateType.Source,
-            _ => ViewStateType.Split
-        };
     }
 
     public void SetViewMenuChecks(bool preview, bool source, bool split)
@@ -299,7 +295,7 @@ public partial class MainForm : Form
             _ => new SplitViewState(),
         };
 
-        SetViewState(viewState);
+        _viewStateManager.Apply(viewState);
     }
 
     protected override void OnFormClosing(FormClosingEventArgs e)
@@ -325,10 +321,5 @@ public partial class MainForm : Form
         searchReplaceControl.HideReplacePanel();
         textBox.Focus();
         return true;
-    }
-
-    private void SetupSearchReplaceControl()
-    {
-        _searchHandler = new SearchHandler(searchReplaceControl, _editor, _commandManager, _searchContext);
     }
 }
