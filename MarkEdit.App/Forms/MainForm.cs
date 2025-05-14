@@ -129,6 +129,8 @@ public partial class MainForm : Form
         });
         //Select All command
         BindClick(selectAllToolStripMenuItem, textBox.SelectAll);
+        //Navigation commands
+        BindClick(goToToolStripMenuItem, () => new GoToCommand(_editor, GotoLinePrompt.GetLineNumber()));
     }
 
     private void WireUpQuickAccessCommands()
