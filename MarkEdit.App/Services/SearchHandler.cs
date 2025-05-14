@@ -6,81 +6,95 @@ using MarkEdit.Core.Commands;
 
 namespace MarkEdit.App.Services;
 
-public class SearchHandler
+public static class SearchHandler
 {
-    private readonly SearchReplaceControl _control;
-    private readonly ITextEditor _editor;
-    private readonly CommandManager _commandManager;
-    private readonly SearchContext _searchContext;
-
-    public SearchHandler(
+    public static void WireEvents(
         SearchReplaceControl control,
         ITextEditor editor,
         CommandManager commandManager,
         SearchContext searchContext)
     {
-        _control = control;
-        _editor = editor;
-        _commandManager = commandManager;
-        _searchContext = searchContext;
-
-        WireEvents();
+        WireSearchTextChanged(control, searchContext);
+        WireSearchKeyDown(control, editor, commandManager, searchContext);
+        WireSearchNavigation(control, editor, commandManager, searchContext);
+        WireReplace(control, editor, commandManager, searchContext);
     }
 
-    private void WireEvents()
+    private static void WireSearchTextChanged(SearchReplaceControl control, SearchContext searchContext)
     {
-        _control.SearchTextChanged += (_, _) =>
+        control.SearchTextChanged += (_, _) =>
         {
-            if (_control.Visible)
+            if (control.Visible)
             {
-                _searchContext.CurrentTerm = _control.SearchTextBox.Text;
-                _searchContext.LastMatchIndex = -1;
+                searchContext.CurrentTerm = control.SearchTextBox.Text;
+                searchContext.LastMatchIndex = -1;
             }
         };
+    }
 
-        _control.SearchTextBox.KeyDown += (_, e) =>
+    private static void WireSearchKeyDown(
+        SearchReplaceControl control,
+        ITextEditor editor,
+        CommandManager commandManager,
+        SearchContext searchContext)
+    {
+        control.SearchTextBox.KeyDown += (_, e) =>
         {
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
-                _editor.Focus();
-                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+                editor.Focus();
+                commandManager.Execute(new FindNextCommand(editor, searchContext));
             }
         };
+    }
 
-        _control.SearchNextClicked += (_, _) =>
+    private static void WireSearchNavigation(
+        SearchReplaceControl control,
+        ITextEditor editor,
+        CommandManager commandManager,
+        SearchContext searchContext)
+    {
+        control.SearchNextClicked += (_, _) =>
         {
-            _editor.Focus();
-            _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+            editor.Focus();
+            commandManager.Execute(new FindNextCommand(editor, searchContext));
         };
 
-        _control.SearchPreviousClicked += (_, _) =>
+        control.SearchPreviousClicked += (_, _) =>
         {
-            _editor.Focus();
-            _commandManager.Execute(new FindPreviousCommand(_editor, _searchContext));
+            editor.Focus();
+            commandManager.Execute(new FindPreviousCommand(editor, searchContext));
         };
+    }
 
-        _control.ReplaceClicked += (_, _) =>
+    private static void WireReplace(
+        SearchReplaceControl control,
+        ITextEditor editor,
+        CommandManager commandManager,
+        SearchContext searchContext)
+    {
+        control.ReplaceClicked += (_, _) =>
         {
-            _editor.Focus();
-            if (_editor.SelectionLength == 0)
+            editor.Focus();
+            if (editor.SelectionLength == 0)
             {
-                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
+                commandManager.Execute(new FindNextCommand(editor, searchContext));
             }
 
-            _commandManager.Execute(new ReplaceCommand(
-                _editor,
-                _searchContext,
-                _control.ReplaceTextBox.Text));
+            commandManager.Execute(new ReplaceCommand(
+                editor,
+                searchContext,
+                control.ReplaceTextBox.Text));
         };
 
-        _control.ReplaceAllClicked += (_, _) =>
+        control.ReplaceAllClicked += (_, _) =>
         {
-            _editor.Focus();
-            _commandManager.Execute(new ReplaceAllCommand(
-                _editor,
-                _control.SearchTextBox.Text,
-                _control.ReplaceTextBox.Text));
+            editor.Focus();
+            commandManager.Execute(new ReplaceAllCommand(
+                editor,
+                control.SearchTextBox.Text,
+                control.ReplaceTextBox.Text));
         };
     }
 }

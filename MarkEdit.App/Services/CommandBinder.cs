@@ -20,9 +20,4 @@ public class CommandBinder
     {
         item.Click += (_, _) => action();
     }
-    
-    public void Bind(Button button, Action action)
-    {
-        button.Click += (_, _) => action();
-    }
 }

@@ -17,7 +17,7 @@ public class ViewStateManager
 
     public void Apply(IViewState state)
     {
-        _form.SetViewStateInternal(state);
+        state.Apply(_form);
 
         _appState.ViewState = state switch
         {
@@ -29,7 +29,7 @@ public class ViewStateManager
         UpdateMenuChecks();
     }
     
-    public void UpdateMenuChecks()
+    private void UpdateMenuChecks()
     {
         var viewStateType = _appState.ViewState;
 

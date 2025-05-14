@@ -1,6 +1,7 @@
 using Markdig;
 using MarkEdit.App.Adapters;
 using MarkEdit.App.Events;
+using MarkEdit.App.Properties;
 using MarkEdit.App.Services;
 using MarkEdit.App.States.App;
 using MarkEdit.App.States.View;
@@ -11,7 +12,6 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
-using MarkEdit.Commands.Replace;
 using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
@@ -27,15 +27,12 @@ public partial class MainForm : Form
     private Document _document = null!;
     private IFileService _fileService = null!;
     private ListContinuationHelper _listContinuation = null!;
-    private IViewState _currentViewState = null!;
     private IAppStateService _appStateService = null!;
     private AppState _appState = null!;
     private SearchContext _searchContext = null!;
-    private SearchHandler _searchHandler = null!;
     private ViewStateManager _viewStateManager = null!;
     private CommandBinder _commandBinder = null!;
     
-
     public SplitContainer SplitContainer => splitContainer;
 
     public MainForm()
@@ -61,9 +58,10 @@ public partial class MainForm : Form
         _appStateService = new JsonAppStateService();
         _appState = _appStateService.Load();
         _searchContext = new SearchContext();
-        _searchHandler = new SearchHandler(searchReplaceControl, _editor, _commandManager, _searchContext);
         _viewStateManager = new ViewStateManager(this, _appState);
         _commandBinder = new CommandBinder(_commandManager);
+        
+        SearchHandler.WireEvents(searchReplaceControl, _editor, _commandManager, _searchContext);
     }
 
     private void InitializeWebView()
@@ -73,6 +71,7 @@ public partial class MainForm : Form
             if (e.IsSuccess)
             {
                 webView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+                UpdatePreview(_editor.Text);
             }
         };
         _ = webView.EnsureCoreWebView2Async(null);
@@ -223,7 +222,7 @@ public partial class MainForm : Form
         var line = textBox.GetLineFromCharIndex(index);
         var column = index - textBox.GetFirstCharIndexOfCurrentLine();
 
-        toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
+        toolStripStatusLabel.Text = string.Format(Resources.ToolStripStatusLabel, line + 1, column + 1);
 
         _document.Content = _editor.Text;
         _document.IsDirty = true;
@@ -278,12 +277,6 @@ public partial class MainForm : Form
         {
             e.Cancel = true;
         }
-    }
-
-    internal void SetViewStateInternal(IViewState state)
-    {
-        _currentViewState = state;
-        state.Apply(this);
     }
 
     internal void SetViewMenuChecks(bool preview, bool source, bool split)
