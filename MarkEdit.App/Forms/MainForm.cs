@@ -31,6 +31,7 @@ public partial class MainForm : Form
     private IAppStateService _appStateService;
     private AppState _appState;
     private SearchContext _searchContext;
+    private SearchHandler _searchHandler;
 
     public SplitContainer SplitContainer => splitContainer;
 
@@ -328,54 +329,6 @@ public partial class MainForm : Form
 
     private void SetupSearchReplaceControl()
     {
-        searchReplaceControl.SearchTextChanged += (_, _) =>
-        {
-            if (searchReplaceControl.Visible)
-            {
-                _searchContext.CurrentTerm = searchReplaceControl.SearchTextBox.Text;
-                _searchContext.LastMatchIndex = -1;
-            }
-        };
-        
-        searchReplaceControl.SearchTextBox.KeyDown += (_, e) =>
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                textBox.Focus();
-                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
-            }
-        };
-
-        searchReplaceControl.SearchNextClicked += (_, _) =>
-        {
-            textBox.Focus();
-            _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
-        };
-
-        searchReplaceControl.SearchPreviousClicked += (_, _) =>
-        {
-            textBox.Focus();
-            _commandManager.Execute(new FindPreviousCommand(_editor, _searchContext));
-        };
-
-        searchReplaceControl.ReplaceClicked += (_, _) =>
-        {
-            textBox.Focus();
-            if (textBox.SelectionLength == 0)
-            {
-                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
-            }
-            _commandManager.Execute(new ReplaceCommand(_editor, _searchContext, searchReplaceControl.ReplaceTextBox.Text));
-        };
-
-        searchReplaceControl.ReplaceAllClicked += (_, _) =>
-        {
-            textBox.Focus();
-            _commandManager.Execute(new ReplaceAllCommand(
-                _editor,
-                searchReplaceControl.SearchTextBox.Text,
-                searchReplaceControl.ReplaceTextBox.Text));
-        };
+        _searchHandler = new SearchHandler(searchReplaceControl, _editor, _commandManager, _searchContext);
     }
 }

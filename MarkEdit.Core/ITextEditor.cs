@@ -14,4 +14,5 @@ public interface ITextEditor
     int GetLineFromCharIndex(int index);
     int GetFirstCharIndexFromLine(int index);
     void ScrollToCaret();
+    bool Focus();
 }

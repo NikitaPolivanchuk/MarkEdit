@@ -71,4 +71,7 @@ public class TextBoxAdapter : ITextEditor
     {
         _textBox.ScrollToCaret();
     }
+
+    public bool Focus()
+        => _textBox.Focus();
 }
