@@ -11,7 +11,6 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
-using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
 using Microsoft.Web.WebView2.Core;
@@ -44,7 +43,6 @@ public partial class MainForm : Form
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
         WireUpViewMenuCommands();
-        WireUpSearchPanelCommands();
     }
 
     private void InitializeServices()
@@ -111,19 +109,7 @@ public partial class MainForm : Form
         BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
         BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
         //Search
-        BindClick(findToolStripMenuItem, () =>
-        {
-            if (searchPanel.Visible)
-            {
-                searchPanel.Visible = false;
-                textBox.Focus();
-            }
-            else
-            {
-                searchPanel.Visible = true;
-                searchPanelTextBox.Focus();
-            }
-        });
+        BindClick(findToolStripMenuItem, ToggleSearchReplaceControl);
     }
 
     private void WireUpQuickAccessCommands()
@@ -306,33 +292,17 @@ public partial class MainForm : Form
         _appState.LastOpenedFilePath = _document.FilePath;
     }
 
-    private void WireUpSearchPanelCommands()
+    private void ToggleSearchReplaceControl()
     {
-        BindClick(closeSearchPanelButton, () => searchPanel.Visible = false);
-        BindClick(nextSeachPanelButton, () => WithActiveSearchPanel(new FindNextCommand(_editor, _searchContext)));
-        BindClick(previousSearchPanelButton, () => WithActiveSearchPanel(new FindPreviousCommand(_editor, _searchContext)));
-    }
-
-    private void SearchPanelTextBox_TextChanged(object sender, EventArgs e)
-    {
-        if (!searchPanel.Visible)
+        if (searchReplaceControl.Visible)
         {
-            return;
+            searchReplaceControl.Hide();
+            textBox.Focus();
         }
-
-        _searchContext.CurrentTerm = searchPanelTextBox.Text;
-        _searchContext.LastMatchIndex = -1;
-    }
-
-    private void WithActiveSearchPanel(ICommand command)
-    {
-        if (!searchPanel.Visible)
+        else
         {
-            searchPanel.Visible = true;
-            return;
+            searchReplaceControl.Show();
+            searchReplaceControl.SearchTextBox.Focus();
         }
-
-        textBox.Focus();
-        _commandManager.Execute(command);
     }
 }
