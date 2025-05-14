@@ -1,6 +1,7 @@
 using Markdig;
 using MarkEdit.App.Adapters;
 using MarkEdit.App.Events;
+using MarkEdit.App.Properties;
 using MarkEdit.App.Services;
 using MarkEdit.App.States.App;
 using MarkEdit.App.States.View;
@@ -11,7 +12,6 @@ using MarkEdit.Commands.File;
 using MarkEdit.Commands.Formatting.Prefixing;
 using MarkEdit.Commands.Formatting.Wrapping;
 using MarkEdit.Commands.List;
-using MarkEdit.Commands.Replace;
 using MarkEdit.Commands.Search;
 using MarkEdit.Core;
 using MarkEdit.Core.Commands;
@@ -21,30 +21,30 @@ namespace MarkEdit.App.Forms;
 
 public partial class MainForm : Form
 {
-    private CommandManager _commandManager;
-    private ITextEditor _editor;
-    private IClipboard _clipboard;
-    private Document _document;
-    private IFileService _fileService;
-    private ListContinuationHelper _listContinuation;
-    private IViewState _currentViewState;
-    private IAppStateService _appStateService;
-    private AppState _appState;
-    private SearchContext _searchContext;
-
+    private CommandManager _commandManager = null!;
+    private ITextEditor _editor = null!;
+    private IClipboard _clipboard = null!;
+    private Document _document = null!;
+    private IFileService _fileService = null!;
+    private ListContinuationHelper _listContinuation = null!;
+    private IAppStateService _appStateService = null!;
+    private AppState _appState = null!;
+    private SearchContext _searchContext = null!;
+    private ViewStateManager _viewStateManager = null!;
+    private CommandBinder _commandBinder = null!;
+    
     public SplitContainer SplitContainer => splitContainer;
 
     public MainForm()
     {
         InitializeComponent();
-        InitializeWebView();
         InitializeServices();
+        InitializeWebView();
         RegisterTextEditorEvents();
         WireUpMenuStripCommands();
         WireUpQuickAccessCommands();
         WireUpContextMenuCommands();
         WireUpViewMenuCommands();
-        SetupSearchReplaceControl();
     }
 
     private void InitializeServices()
@@ -58,6 +58,10 @@ public partial class MainForm : Form
         _appStateService = new JsonAppStateService();
         _appState = _appStateService.Load();
         _searchContext = new SearchContext();
+        _viewStateManager = new ViewStateManager(this, _appState);
+        _commandBinder = new CommandBinder(_commandManager);
+        
+        SearchHandler.WireEvents(searchReplaceControl, _editor, _commandManager, _searchContext);
     }
 
     private void InitializeWebView()
@@ -67,9 +71,9 @@ public partial class MainForm : Form
             if (e.IsSuccess)
             {
                 webView.CoreWebView2.NavigationStarting += CoreWebView2_NavigationStarting;
+                UpdatePreview(_editor.Text);
             }
         };
-
         _ = webView.EnsureCoreWebView2Async(null);
     }
 
@@ -80,87 +84,102 @@ public partial class MainForm : Form
         textBox.TextChanged += OnTextChanged;
     }
 
+    #region CommandsBinding
+
     private void WireUpMenuStripCommands()
     {
         //File commands
-        BindClick(newToolStripMenuItem, () => new NewCommand(_document, _editor));
-        BindClick(openToolStripMenuItem, () => WithFilePathUpdate(new OpenCommand(_document, _fileService, _editor)));
-        BindClick(saveToolStripMenuItem, () => WithFilePathUpdate(new SaveCommand(_document, _fileService, _editor)));
-        BindClick(saveAsToolStripMenuItem, () => WithFilePathUpdate(new SaveAsCommand(_document, _fileService, _editor)));
-        BindClick(exitToolStripMenuItem, Application.Exit);
+        _commandBinder.Bind(newToolStripMenuItem, () => new NewCommand(_document, _editor));
+        _commandBinder.Bind(openToolStripMenuItem, () => WithFilePathUpdate(new OpenCommand(_document, _fileService, _editor)));
+        _commandBinder.Bind(saveToolStripMenuItem, () => WithFilePathUpdate(new SaveCommand(_document, _fileService, _editor)));
+        _commandBinder.Bind(saveAsToolStripMenuItem, () => WithFilePathUpdate(new SaveAsCommand(_document, _fileService, _editor)));
+        _commandBinder.Bind(exitToolStripMenuItem, Application.Exit);
+
         //Clipboard commands
-        BindClick(cutToolStripMenuItem, () => new CutCommand(_editor, _clipboard));
-        BindClick(copyToolStripMenuItem, () => new CopyCommand(_editor, _clipboard));
-        BindClick(pasteToolStripMenuItem, () => new PasteCommand(_editor, _clipboard));
+        _commandBinder.Bind(cutToolStripMenuItem, () => new CutCommand(_editor, _clipboard));
+        _commandBinder.Bind(copyToolStripMenuItem, () => new CopyCommand(_editor, _clipboard));
+        _commandBinder.Bind(pasteToolStripMenuItem, () => new PasteCommand(_editor, _clipboard));
+
         //History commands
-        BindClick(undoToolStripMenuItem, _commandManager.Undo);
-        BindClick(redoToolStripMenuItem, _commandManager.Redo);
+        _commandBinder.Bind(undoToolStripMenuItem, _commandManager.Undo);
+        _commandBinder.Bind(redoToolStripMenuItem, _commandManager.Redo);
+
         //Formatting commands
-        BindClick(boldToolStripMenuItem, () => new BoldCommand(_editor));
-        BindClick(italicToolStripMenuItem, () => new ItalicCommand(_editor));
-        BindClick(h1ToolStripMenuItem, () => new HeaderCommand(_editor, 1));
-        BindClick(h2ToolStripMenuItem, () => new HeaderCommand(_editor, 2));
-        BindClick(h3ToolStripMenuItem, () => new HeaderCommand(_editor, 3));
-        BindClick(h4ToolStripMenuItem, () => new HeaderCommand(_editor, 4));
-        BindClick(h5ToolStripMenuItem, () => new HeaderCommand(_editor, 5));
-        BindClick(h6ToolStripMenuItem, () => new HeaderCommand(_editor, 6));
-        //Link command
-        BindClick(linkToolStripMenuItem, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
+        _commandBinder.Bind(boldToolStripMenuItem, () => new BoldCommand(_editor));
+        _commandBinder.Bind(italicToolStripMenuItem, () => new ItalicCommand(_editor));
+        _commandBinder.Bind(h1ToolStripMenuItem, () => new HeaderCommand(_editor, 1));
+        _commandBinder.Bind(h2ToolStripMenuItem, () => new HeaderCommand(_editor, 2));
+        _commandBinder.Bind(h3ToolStripMenuItem, () => new HeaderCommand(_editor, 3));
+        _commandBinder.Bind(h4ToolStripMenuItem, () => new HeaderCommand(_editor, 4));
+        _commandBinder.Bind(h5ToolStripMenuItem, () => new HeaderCommand(_editor, 5));
+        _commandBinder.Bind(h6ToolStripMenuItem, () => new HeaderCommand(_editor, 6));
+
+        //Inserting commands
+        _commandBinder.Bind(linkToolStripMenuItem, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
+
         //List commands
-        BindClick(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
-        BindClick(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
-        //Search + Replace commands
-        BindClick(findToolStripMenuItem, () =>
+        _commandBinder.Bind(bulletListToolStripMenuItem, () => new BulletListCommand(_editor));
+        _commandBinder.Bind(numberedListToolStripMenuItem, () => new NumberedListCommand(_editor));
+
+        //Searching + Replacing commands
+        _commandBinder.Bind(findToolStripMenuItem, () =>
         {
             searchReplaceControl.Show();
             searchReplaceControl.SearchTextBox.Focus();
             searchReplaceControl.SearchTextBox.SelectAll();
         });
-        BindClick(findNextToolStripMenuItem, () => new FindNextCommand(_editor, _searchContext));
-        BindClick(findPreviousToolStripMenuItem, () => new FindPreviousCommand(_editor, _searchContext));
-        BindClick(replaceToolStripMenuItem, () =>
+        _commandBinder.Bind(findNextToolStripMenuItem, () => new FindNextCommand(_editor, _searchContext));
+        _commandBinder.Bind(findPreviousToolStripMenuItem, () => new FindPreviousCommand(_editor, _searchContext));
+        _commandBinder.Bind(replaceToolStripMenuItem, () =>
         {
             searchReplaceControl.Show();
             searchReplaceControl.ShowReplacePanel();
             searchReplaceControl.SearchTextBox.Focus();
             searchReplaceControl.SearchTextBox.SelectAll();
         });
-        //Select All command
-        BindClick(selectAllToolStripMenuItem, textBox.SelectAll);
+
+        //Selecting commands
+        _commandBinder.Bind(selectAllToolStripMenuItem, textBox.SelectAll);
+
         //Navigation commands
-        BindClick(goToToolStripMenuItem, () => new GoToCommand(_editor, GotoLinePrompt.GetLineNumber()));
+        _commandBinder.Bind(goToToolStripMenuItem, () => new GoToCommand(_editor, GotoLinePrompt.GetLineNumber()));
     }
 
     private void WireUpQuickAccessCommands()
     {
         //File commands
-        BindClick(newQuickAccessButton, () => new NewCommand(_document, _editor));
-        BindClick(openQuickAccessButton, () => WithFilePathUpdate(new OpenCommand(_document, _fileService, _editor)));
-        BindClick(saveQuickAccessButton, () => WithFilePathUpdate(new SaveCommand(_document, _fileService, _editor)));
-        BindClick(saveAsQuickAccessButton, () => WithFilePathUpdate(new SaveAsCommand(_document, _fileService, _editor)));
+        _commandBinder.Bind(newQuickAccessButton, () => new NewCommand(_document, _editor));
+        _commandBinder.Bind(openQuickAccessButton, () => WithFilePathUpdate(new OpenCommand(_document, _fileService, _editor)));
+        _commandBinder.Bind(saveQuickAccessButton, () => WithFilePathUpdate(new SaveCommand(_document, _fileService, _editor)));
+        _commandBinder.Bind(saveAsQuickAccessButton, () => WithFilePathUpdate(new SaveAsCommand(_document, _fileService, _editor)));
+
         //Clipboard commands
-        BindClick(cutQuickAccessButton, () => new CutCommand(_editor, _clipboard));
-        BindClick(copyQuickAccessButton, () => new CopyCommand(_editor, _clipboard));
-        BindClick(pasteQuickAccessButton, () => new PasteCommand(_editor, _clipboard));
+        _commandBinder.Bind(cutQuickAccessButton, () => new CutCommand(_editor, _clipboard));
+        _commandBinder.Bind(copyQuickAccessButton, () => new CopyCommand(_editor, _clipboard));
+        _commandBinder.Bind(pasteQuickAccessButton, () => new PasteCommand(_editor, _clipboard));
+
         //History commands
-        BindClick(undoQuickAccessButton, _commandManager.Undo);
-        BindClick(redoQuickAccessButton, _commandManager.Redo);
+        _commandBinder.Bind(undoQuickAccessButton, _commandManager.Undo);
+        _commandBinder.Bind(redoQuickAccessButton, _commandManager.Redo);
+
         //Formatting commands
-        BindClick(boldQuickAccessButton, () => new BoldCommand(_editor));
-        BindClick(italicQuickAccessButton, () => new ItalicCommand(_editor));
-        BindClick(quoteQuickAccessButton, () => new QuoteCommand(_editor));
-        BindClick(codeQuickAccessButton, () => new CodeCommand(_editor));
-        BindClick(h1QuickAccessItem, () => new HeaderCommand(_editor, 1));
-        BindClick(h2QuickAccessItem, () => new HeaderCommand(_editor, 2));
-        BindClick(h3QuickAccessItem, () => new HeaderCommand(_editor, 3));
-        BindClick(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
-        BindClick(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
-        BindClick(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
-        //Link command
-        BindClick(linkQuickAccessButton, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
+        _commandBinder.Bind(boldQuickAccessButton, () => new BoldCommand(_editor));
+        _commandBinder.Bind(italicQuickAccessButton, () => new ItalicCommand(_editor));
+        _commandBinder.Bind(quoteQuickAccessButton, () => new QuoteCommand(_editor));
+        _commandBinder.Bind(codeQuickAccessButton, () => new CodeCommand(_editor));
+        _commandBinder.Bind(h1QuickAccessItem, () => new HeaderCommand(_editor, 1));
+        _commandBinder.Bind(h2QuickAccessItem, () => new HeaderCommand(_editor, 2));
+        _commandBinder.Bind(h3QuickAccessItem, () => new HeaderCommand(_editor, 3));
+        _commandBinder.Bind(h4QuickAccessItem, () => new HeaderCommand(_editor, 4));
+        _commandBinder.Bind(h5QuickAccessItem, () => new HeaderCommand(_editor, 5));
+        _commandBinder.Bind(h6QuickAccessItem, () => new HeaderCommand(_editor, 6));
+
+        //Inserting commands
+        _commandBinder.Bind(linkQuickAccessButton, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
+
         //List commands
-        BindClick(bulletListQuickAccessButton, () => new BulletListCommand(_editor));
-        BindClick(numberedListQuickAccessButton, () => new NumberedListCommand(_editor));
+        _commandBinder.Bind(bulletListQuickAccessButton, () => new BulletListCommand(_editor));
+        _commandBinder.Bind(numberedListQuickAccessButton, () => new NumberedListCommand(_editor));
     }
 
     private void WireUpContextMenuCommands()
@@ -168,36 +187,34 @@ public partial class MainForm : Form
         textBox.ContextMenuStrip = contextMenuStrip;
 
         //History commands
-        BindClick(undoContextMenuItem, _commandManager.Undo);
-        BindClick(redoContextMenuItem, _commandManager.Redo);
+        _commandBinder.Bind(undoContextMenuItem, _commandManager.Undo);
+        _commandBinder.Bind(redoContextMenuItem, _commandManager.Redo);
+
         //Clipboard commands
-        BindClick(cutContextMenuItem, () => new CutCommand(_editor, _clipboard));
-        BindClick(copyContextMenuItem, () => new CopyCommand(_editor, _clipboard));
-        BindClick(pasteContextMenuItem, () => new PasteCommand(_editor, _clipboard));
+        _commandBinder.Bind(cutContextMenuItem, () => new CutCommand(_editor, _clipboard));
+        _commandBinder.Bind(copyContextMenuItem, () => new CopyCommand(_editor, _clipboard));
+        _commandBinder.Bind(pasteContextMenuItem, () => new PasteCommand(_editor, _clipboard));
+
         //Formatting commands
-        BindClick(boldContextMenuItem, () => new BoldCommand(_editor));
-        BindClick(italicContextMenuItem, () => new ItalicCommand(_editor));
-        BindClick(codeContextMenuItem, () => new CodeCommand(_editor));
-        //Link command
-        BindClick(linkContextMenuItem, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
-        //Select all command
-        BindClick(selectAllContextMenuItem, textBox.SelectAll);
-    }
+        _commandBinder.Bind(boldContextMenuItem, () => new BoldCommand(_editor));
+        _commandBinder.Bind(italicContextMenuItem, () => new ItalicCommand(_editor));
+        _commandBinder.Bind(codeContextMenuItem, () => new CodeCommand(_editor));
 
-    private void BindClick(ToolStripItem item, Func<ICommand> commandFactory)
-    {
-        item.Click += (_, _) => _commandManager.Execute(commandFactory());
-    }
+        //Inserting commands
+        _commandBinder.Bind(linkContextMenuItem, () => new LinkCommand(_editor, LinkPrompt.GetUrlLink()));
 
-    private void BindClick(ToolStripItem item, Action action)
-    {
-        item.Click += (_, _) => action();
+        //Selecting commands
+        _commandBinder.Bind(selectAllContextMenuItem, textBox.SelectAll);
     }
-
-    private void BindClick(Button button, Action action)
+    
+    private void WireUpViewMenuCommands()
     {
-        button.Click += (_, _) => action();
+        _commandBinder.Bind(togglePreviewToolStripMenuItem, () => _viewStateManager.Apply(new PreviewOnlyState()));
+        _commandBinder.Bind(toggleSourceViewToolStripMenuItem, () => _viewStateManager.Apply(new SourceOnlyState()));
+        _commandBinder.Bind(splitViewToolStripMenuItem, () => _viewStateManager.Apply(new SplitViewState()));
     }
+    
+    #endregion
 
     private void OnTextChanged(object? sender, EventArgs e)
     {
@@ -205,7 +222,7 @@ public partial class MainForm : Form
         var line = textBox.GetLineFromCharIndex(index);
         var column = index - textBox.GetFirstCharIndexOfCurrentLine();
 
-        toolStripStatusLabel.Text = $"Ln {line + 1}, Col {column + 1}";
+        toolStripStatusLabel.Text = string.Format(Resources.ToolStripStatusLabel, line + 1, column + 1);
 
         _document.Content = _editor.Text;
         _document.IsDirty = true;
@@ -247,6 +264,12 @@ public partial class MainForm : Form
         var html = Markdown.ToHtml(content);
         webView.CoreWebView2?.NavigateToString($"<html><body>{html}</body></html>");
     }
+    
+    private void WithFilePathUpdate(ICommand command)
+    {
+        _commandManager.Execute(command);
+        _appState.LastOpenedFilePath = _document.FilePath;
+    }
 
     private void CoreWebView2_NavigationStarting(object? sender, CoreWebView2NavigationStartingEventArgs e)
     {
@@ -256,27 +279,7 @@ public partial class MainForm : Form
         }
     }
 
-    private void WireUpViewMenuCommands()
-    {
-        BindClick(togglePreviewToolStripMenuItem, () => SetViewState(new PreviewOnlyState()));
-        BindClick(toggleSourceViewToolStripMenuItem, () => SetViewState(new SourceOnlyState()));
-        BindClick(splitViewToolStripMenuItem, () => SetViewState(new SplitViewState()));
-    }
-
-    private void SetViewState(IViewState state)
-    {
-        _currentViewState = state;
-        state.Apply(this);
-
-        _appState.ViewState = state switch
-        {
-            PreviewOnlyState => ViewStateType.Preview,
-            SourceOnlyState => ViewStateType.Source,
-            _ => ViewStateType.Split
-        };
-    }
-
-    public void SetViewMenuChecks(bool preview, bool source, bool split)
+    internal void SetViewMenuChecks(bool preview, bool source, bool split)
     {
         togglePreviewToolStripMenuItem.Checked = preview;
         toggleSourceViewToolStripMenuItem.Checked = source;
@@ -298,19 +301,13 @@ public partial class MainForm : Form
             _ => new SplitViewState(),
         };
 
-        SetViewState(viewState);
+        _viewStateManager.Apply(viewState);
     }
 
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
         _appStateService.Save(_appState);
         base.OnFormClosing(e);
-    }
-
-    private void WithFilePathUpdate(ICommand command)
-    {
-        _commandManager.Execute(command);
-        _appState.LastOpenedFilePath = _document.FilePath;
     }
     
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -324,58 +321,5 @@ public partial class MainForm : Form
         searchReplaceControl.HideReplacePanel();
         textBox.Focus();
         return true;
-    }
-
-    private void SetupSearchReplaceControl()
-    {
-        searchReplaceControl.SearchTextChanged += (_, _) =>
-        {
-            if (searchReplaceControl.Visible)
-            {
-                _searchContext.CurrentTerm = searchReplaceControl.SearchTextBox.Text;
-                _searchContext.LastMatchIndex = -1;
-            }
-        };
-        
-        searchReplaceControl.SearchTextBox.KeyDown += (_, e) =>
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                textBox.Focus();
-                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
-            }
-        };
-
-        searchReplaceControl.SearchNextClicked += (_, _) =>
-        {
-            textBox.Focus();
-            _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
-        };
-
-        searchReplaceControl.SearchPreviousClicked += (_, _) =>
-        {
-            textBox.Focus();
-            _commandManager.Execute(new FindPreviousCommand(_editor, _searchContext));
-        };
-
-        searchReplaceControl.ReplaceClicked += (_, _) =>
-        {
-            textBox.Focus();
-            if (textBox.SelectionLength == 0)
-            {
-                _commandManager.Execute(new FindNextCommand(_editor, _searchContext));
-            }
-            _commandManager.Execute(new ReplaceCommand(_editor, _searchContext, searchReplaceControl.ReplaceTextBox.Text));
-        };
-
-        searchReplaceControl.ReplaceAllClicked += (_, _) =>
-        {
-            textBox.Focus();
-            _commandManager.Execute(new ReplaceAllCommand(
-                _editor,
-                searchReplaceControl.SearchTextBox.Text,
-                searchReplaceControl.ReplaceTextBox.Text));
-        };
     }
 }
