@@ -27,7 +27,7 @@ public class LinkCommand : IRevertibleCommand
     {
         _editor.Select(_selectionStart, _selectionLength);
 
-        var link = $"[{_editor.SelectedText}]({WebUtility.UrlEncode(_url)})";
+        var link = $"[{_editor.SelectedText}]({_url})";
         _newSelectionLength = link.Length;
         _editor.SelectedText = link;
         _editor.Select(_selectionStart, _newSelectionLength);
