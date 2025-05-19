@@ -1,5 +1,9 @@
 # MarkEdit
 
+## Lines verification
+
+![image](https://github.com/NikitaPolivanchuk/MarkEdit/blob/main/lines%20verify.png)
+
 ## General
 
 ### User interface
@@ -182,6 +186,7 @@ var column = index - textBox.GetFirstCharIndexOfCurrentLine();
 Template for status label is loaded from resourse file:
 
 ```
-toolStripStatusLabel.Text = string.Format(Resources.ToolStripStatusLabel, line + 1, column + 1);
+toolStripStatusLabel.Text = string.Format(Resources.ToolStripStatusLabel, line + 1, column + 1);
+
 
 ```
